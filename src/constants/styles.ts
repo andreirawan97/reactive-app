@@ -1,0 +1,19 @@
+export const FONT_SIZE = {
+  JUMBO: 42,
+  HEADER1: 30,
+  HEADER2: 26,
+  PARAGRAPH1: 18,
+  CAPTION: 15,
+};
+
+export const COLORS = {
+  PRIMARY: '#72D2E3',
+  PRIMARY_TEXT: '#FAF8ED',
+  CAPTION: 'rgba(0,0,0,0.6)',
+};
+
+export const MODAL_COLORS = {
+  MODAL_CLOSE: '##838383',
+  MODAL_NEXT_STAGE_BACKGROUND: '##7F72E3',
+  MODAL_TRY_AGAIN_BACKGROUND: '##E37290',
+};
