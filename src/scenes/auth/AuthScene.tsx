@@ -1,13 +1,12 @@
 import React from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
-import FlexImage from 'react-native-flex-image';
 
 import Switcher from '../../core-ui/switcher';
 import { TextInput, Button } from '../../core-ui';
 import { FONT_SIZE } from '../../constants/styles';
 import { LoginImage } from '../../../assets';
 
-export default function LoginScene() {
+export default function AuthScene() {
   const LoginForm = () => (
     <View>
       <TextInput label="Email" containerStyle={{ marginBottom: 20 }} />

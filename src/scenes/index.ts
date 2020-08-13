@@ -1,3 +1,3 @@
-import LoginScene from './auth/LoginScene';
+import AuthScene from './auth/AuthScene';
 
-export { LoginScene };
+export { AuthScene };
