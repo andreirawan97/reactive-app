@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ViewStyle,
   Text,
+  TextStyle,
 } from 'react-native';
 import { COLORS } from '../constants/styles';
 
@@ -14,10 +15,18 @@ type Props = {
   onPress: () => void;
   backgroundColor?: string;
   titleColor?: string;
+  titleStyle?: TextStyle;
   containerStyle?: ViewStyle;
 };
 export default function Button(props: Props) {
-  let { title, onPress, backgroundColor, titleColor, containerStyle } = props;
+  let {
+    title,
+    onPress,
+    backgroundColor,
+    titleColor,
+    containerStyle,
+    titleStyle,
+  } = props;
 
   const BUTTON_COLOR = backgroundColor || COLORS.PRIMARY;
   const TITLE_COLOR = titleColor || COLORS.PRIMARY_TEXT;
@@ -30,7 +39,9 @@ export default function Button(props: Props) {
       ]}
       onPress={onPress}
     >
-      <Text style={[styles.title, { color: TITLE_COLOR }]}>{title}</Text>
+      <Text style={[styles.title, titleStyle, { color: TITLE_COLOR }]}>
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 }

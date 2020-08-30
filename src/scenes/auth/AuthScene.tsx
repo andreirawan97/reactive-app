@@ -1,28 +1,75 @@
-import React from 'react';
-import { View, StyleSheet, Text, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Text, Image, Alert, Modal } from 'react-native';
 
-import Switcher from '../../core-ui/switcher';
+import Switcher from '../../core-ui/Switcher';
 import { TextInput, Button } from '../../core-ui';
 import { FONT_SIZE } from '../../constants/styles';
 import { LoginImage } from '../../../assets';
+import { setStorage } from '../../helpers/storage';
+import { LOCALSTORAGE_KEYS } from '../../constants/keys';
 
 export default function AuthScene() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+
+  let onLoginSuccess = () => {
+    setStorage(LOCALSTORAGE_KEYS.IS_LOGGED_IN, true);
+    window.location.reload();
+  };
+
   const LoginForm = () => (
     <View>
-      <TextInput label="Email" containerStyle={{ marginBottom: 20 }} />
+      <TextInput
+        label="Email"
+        containerStyle={{ marginBottom: 20 }}
+        value={email}
+        onChangeText={setEmail}
+      />
       <TextInput
         label="Password"
         secureTextEntry={true}
         containerStyle={{ marginBottom: 38 }}
+        value={password}
+        onChangeText={setPassword}
       />
 
-      <Button title="Login" onPress={() => {}} />
+      <Button
+        title="Login"
+        onPress={() => {
+          onLoginSuccess();
+        }}
+      />
     </View>
   );
 
   const SignupForm = () => (
     <View>
-      <Text>On Progress</Text>
+      <TextInput
+        label="Full Name"
+        containerStyle={{ marginBottom: 20 }}
+        value={fullName}
+        onChangeText={setFullName}
+      />
+      <TextInput
+        label="Email"
+        containerStyle={{ marginBottom: 20 }}
+        value={email}
+        onChangeText={setEmail}
+      />
+      <TextInput
+        label="Password"
+        secureTextEntry={true}
+        containerStyle={{ marginBottom: 38 }}
+        value={password}
+        onChangeText={setPassword}
+      />
+      <Button
+        title="Signup"
+        onPress={() => {
+          Alert.alert('Tes', `${email} ${password}`);
+        }}
+      />
     </View>
   );
 
