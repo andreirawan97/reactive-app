@@ -10,7 +10,7 @@ import {
 
 import { COLORS, FONT_SIZE } from '../constants/styles';
 
-type Content = {
+export type Content = {
   headerText: string;
   component: () => ReactElement;
 };
@@ -25,7 +25,6 @@ export default function Switcher(props: Props) {
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const SelectedComponent = contents[selectedIndex].component;
   return (
     <View style={containerStyle}>
       <ScrollView
@@ -35,6 +34,7 @@ export default function Switcher(props: Props) {
         {contents.map((content, i) => {
           return i === selectedIndex ? (
             <TouchableOpacity
+              key={i}
               style={styles.headerTextContainer}
               onPress={() => setSelectedIndex(i)}
             >
@@ -45,6 +45,7 @@ export default function Switcher(props: Props) {
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
+              key={i}
               style={styles.headerTextContainer}
               onPress={() => setSelectedIndex(i)}
             >
@@ -54,7 +55,7 @@ export default function Switcher(props: Props) {
         })}
       </ScrollView>
       <View style={styles.componentContainer}>
-        <SelectedComponent />
+        {contents[selectedIndex].component()}
       </View>
     </View>
   );

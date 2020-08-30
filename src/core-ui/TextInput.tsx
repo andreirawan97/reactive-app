@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ViewStyle,
 } from 'react-native';
+
 import { FONT_SIZE } from '../constants/styles';
 
 type Props = {

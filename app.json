@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Expo TypeScript",
+    "name": "Reactive",
     "slug": "example-expo-ts",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,9 +13,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
