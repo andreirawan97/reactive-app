@@ -10,29 +10,29 @@ type JourneyData = {
 };
 
 export type UserData = {
-  id: string; // ID from firebase
   email: string;
   name: string;
   currency: number; // This meant for read-only. Transaction will be checked in backend.
   currentExp: number;
   profilePicBase64: string; // Gatau ini bener apa engga.
   border: string;
-  latestAchievementId: AchievementId;
+  unlockedAchievements: Array<AchievementId>;
+  unlockedSkinId: Array<string>;
   phoneSkinId: string;
-  completedJourney: Array<JourneyData>;
+  journeyData: Array<JourneyData>;
 };
 
 export const userDataMock: UserData = {
-  id: 'zxcvbnmn',
   email: 'andreirawan97@gmail.com',
   name: 'Andre Irawan',
   currency: 1000,
   currentExp: 3045,
   profilePicBase64: '',
   border: COLORS.PASTEL_SALMON,
-  latestAchievementId: 'helloWorld',
+  unlockedAchievements: ['helloWorld'],
+  unlockedSkinId: ['iphone6'],
   phoneSkinId: 'iphone6',
-  completedJourney: [
+  journeyData: [
     {
       id: 'helloWorld',
       completedLevel: 1,
@@ -41,16 +41,16 @@ export const userDataMock: UserData = {
 };
 
 export const emptyUserData: UserData = {
-  id: '',
   email: '',
   name: '',
   currency: 0,
   currentExp: 0,
   profilePicBase64: '',
   border: '',
-  latestAchievementId: '',
+  unlockedAchievements: [],
+  unlockedSkinId: [],
   phoneSkinId: '',
-  completedJourney: [
+  journeyData: [
     {
       id: 'helloWorld',
       completedLevel: 1,

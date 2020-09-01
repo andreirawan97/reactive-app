@@ -2,19 +2,19 @@ type Friend = {
   profilePicBase64: string;
   currentExp: number;
   name: string;
-  id: string;
+  email: string;
 };
 
 export const friendListMock: Array<Friend> = [
   {
-    id: 'qwer',
+    email: 'nolifegaming@gmail.com',
     currentExp: 98000,
     name: 'No Life Gaming',
     profilePicBase64: '',
   },
   {
-    id: 'qwer',
-    currentExp: 98000,
+    email: 'tes@gmail.com',
+    currentExp: 0,
     name: 'Tessss',
     profilePicBase64: '',
   },
