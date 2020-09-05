@@ -13,3 +13,19 @@ web-build/
 .DS_Store
 
 /coverage
+
+frontend/node_modules/**/*
+frontend/.expo/*
+frontend/npm-debug.*
+frontend/*.jks
+frontend/*.p8
+frontend/*.p12
+frontend/*.key
+frontend/*.mobileprovision
+frontend/*.orig.*
+frontend/web-build/
+
+# macOS
+frontend/.DS_Store
+
+frontend/coverage

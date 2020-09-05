@@ -1,8 +1,8 @@
-export function setStorage(key: string, value: unknown) {
+export function setToStorage(key: string, value: unknown) {
   return localStorage.setItem(key, String(value));
 }
 
-export function getStorage(key: string) {
+export function getFromStorage(key: string) {
   return localStorage.getItem(key);
 }
 

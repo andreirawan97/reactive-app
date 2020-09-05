@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,20 +10,42 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import SVG from '../../../../assets/svg';
 import { HomeCard } from '../../../components';
-import { Button } from '../../../core-ui';
-import { userDataMock } from '../../../fixtures/user';
-import getAchievement from '../../../helpers/getAchievement';
+import { Button, Fetcher } from '../../../core-ui';
+import { getAchievement } from '../../../helpers/achievement';
 import { COLORS } from '../../../constants/styles';
 import { friendListMock } from '../../../fixtures/friend';
+import { NavigationScreenProps } from '../../../types/navigation';
+import { getFromStorage } from '../../../helpers/storage';
+import { LOCALSTORAGE_KEYS } from '../../../constants/keys';
+import { FIREBASE_URL, ENDPOINT } from '../../../constants/network';
+import { decodeToken } from '../../../helpers/token';
+import { Response } from '../../../types/firestore';
+import { UserAchievements } from '../../../fixtures/achievements';
 
-type Props = {};
+type Props = {} & NavigationScreenProps;
+
 export default function HomeScene(props: Props) {
+  const [userAchievements, setUserAchievements] = useState<UserAchievements>({
+    latestAchievementId: '',
+    data: {
+      helloWorld: false, // Boolean for is the achievement unlocked. The default is false
+      aPerspective: false,
+    },
+  });
+
+  const token = getFromStorage(LOCALSTORAGE_KEYS.TOKEN);
+  const getUserAchievementsURL = `${FIREBASE_URL}${ENDPOINT.GET_USER_ACHIEVEMENTS}`;
+
+  let onSuccessGetUserAchievements = (response: Response) => {
+    let { token } = response;
+    let data = decodeToken(token) as UserAchievements;
+    setUserAchievements(data);
+  };
+
   let HomeStart = () =>
     React.createElement(SVG.homeStartSVG, { width: 450, height: 450 });
-
   let AchievementIcon = () =>
     React.createElement(SVG.achievementSVG, { width: 30, height: 30 });
-
   let FriendListIcon = () =>
     React.createElement(SVG.friendListSVG, { width: 30, height: 30 });
 
@@ -68,54 +90,60 @@ export default function HomeScene(props: Props) {
   );
 
   let LatestAchievement = () => {
-    useEffect(() => {
-      // TODO: Fetch latest achievement
-      console.log('Achievement Loaded');
-    }, []);
-
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          paddingHorizontal: 20,
-        }}
+      <Fetcher
+        method="POST"
+        URL={getUserAchievementsURL}
+        requestBody={{ token }}
+        onSuccess={onSuccessGetUserAchievements}
       >
-        <Text
-          style={{
-            fontSize: 14,
-            fontWeight: 'bold',
-            marginVertical: 12,
-          }}
-          numberOfLines={1}
-        >
-          {getAchievement(userDataMock.latestAchievementId).name}
-        </Text>
+        {userAchievements?.latestAchievementId === '' ? (
+          <NoAchievement />
+        ) : (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingHorizontal: 20,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: 'bold',
+                marginVertical: 12,
+              }}
+              numberOfLines={1}
+            >
+              {getAchievement(userAchievements.latestAchievementId).name}
+            </Text>
 
-        <Text
-          style={{
-            fontSize: 12,
-            marginBottom: 24,
-          }}
-          numberOfLines={1}
-        >
-          {getAchievement(userDataMock.latestAchievementId).caption}
-        </Text>
+            <Text
+              style={{
+                fontSize: 12,
+                marginBottom: 24,
+              }}
+              numberOfLines={1}
+            >
+              {getAchievement(userAchievements.latestAchievementId).caption}
+            </Text>
 
-        <Button
-          title="View All"
-          onPress={() => {}}
-          containerStyle={{
-            borderRadius: 21,
-            height: 42,
-            width: '50%',
-          }}
-          titleStyle={{
-            fontSize: 12,
-          }}
-        />
-      </View>
+            <Button
+              title="View All"
+              onPress={() => {}}
+              containerStyle={{
+                borderRadius: 21,
+                height: 42,
+                width: '50%',
+              }}
+              titleStyle={{
+                fontSize: 12,
+              }}
+            />
+          </View>
+        )}
+      </Fetcher>
     );
   };
 
@@ -181,11 +209,7 @@ export default function HomeScene(props: Props) {
           <HomeCard
             title="Achievements"
             titleIcon={AchievementIcon}
-            content={
-              userDataMock.latestAchievementId
-                ? LatestAchievement
-                : NoAchievement
-            }
+            content={LatestAchievement}
           />
         </View>
         <View style={{ flex: 2 }}>

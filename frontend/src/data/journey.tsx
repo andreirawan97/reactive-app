@@ -19,6 +19,8 @@ export type Level = {
   codeContent: Array<Code>;
   correctAnswer: string;
   expectedOutput: () => ReactElement;
+  timeLimit: number; // in milisecond
+  difficulty: number; // scale 1-5. Final score (timeLimitMax - currentTimeLimit) / 1000 * difficulty
 };
 
 export type Stage = {

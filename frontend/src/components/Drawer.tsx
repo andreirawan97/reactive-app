@@ -32,9 +32,11 @@ export default function Drawer(props: Props) {
    *
    */
   let { contents, userData } = props;
-  let { border, currency, currentExp } = userData;
+  let { border, currency, currentExp, name } = userData;
 
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const animatedTranslateValue = new Animated.Value(150);
+  const animatedFadeValue = new Animated.Value(0);
 
   let onLogout = () => {
     clearStorage();
@@ -65,9 +67,6 @@ export default function Drawer(props: Props) {
   };
 
   let SelectedComponent = () => {
-    let animatedTranslateValue = new Animated.Value(150);
-    let animatedFadeValue = new Animated.Value(0);
-
     Animated.parallel([
       Animated.timing(animatedTranslateValue, {
         toValue: 0,
@@ -113,7 +112,7 @@ export default function Drawer(props: Props) {
             ]}
           />
           <Text style={styles.name} numberOfLines={1}>
-            Andre Irawan
+            {name}
           </Text>
 
           <View style={styles.currencyContainer}>
