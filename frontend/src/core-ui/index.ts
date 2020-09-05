@@ -3,5 +3,6 @@ import TextInput from './TextInput';
 import Button from './Button';
 import Fetcher from './Fetcher';
 import Loading from './Loading';
+import ModalProvider from './ModalProvider';
 
-export { Switcher, TextInput, Button, Fetcher, Loading };
+export { Switcher, TextInput, Button, Fetcher, Loading, ModalProvider };
