@@ -6,12 +6,12 @@ import { NavigationScreenProps } from '../../types/navigation';
 import { COLORS, FONT_SIZE } from '../../constants/styles';
 import { Level } from '../../data/journey';
 import { Phone } from '../../components';
+import { msToTime } from '../../helpers/format';
+import SVG from '../../../assets/svg';
 
 type Props = {} & NavigationScreenProps;
 
 export default function LevelScene(props: Props) {
-  const [answer, setAnswer] = useState('');
-
   let {
     codeContent,
     content,
@@ -19,25 +19,39 @@ export default function LevelScene(props: Props) {
     stageName,
     expectedOutput,
     correctAnswer,
+    difficulty,
+    timeLimit,
   } = props.route.params as Level;
 
-  let cleanup = () => {
-    setAnswer('');
-  };
-
-  let onChangeAnswerField = (value: string) => {
-    setAnswer(value);
-  };
+  const [answer, setAnswer] = useState('');
+  const [currentTime, setCurrentTime] = useState(timeLimit);
+  const [stopTimer, setStopTimer] = useState(false);
 
   useEffect(() => {
-    return () => cleanup();
-  }, []);
+    const intervalId = setInterval(() => {
+      if (!stopTimer) {
+        setCurrentTime(currentTime - 1000);
+      }
+    }, 1000);
+
+    // Time's up
+    if (currentTime === 0) {
+      clearInterval(intervalId);
+    }
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [currentTime, stopTimer]);
 
   useEffect(() => {
     if (answer === correctAnswer) {
-      console.log('BENAR!');
+      setStopTimer(true);
     }
-  }, [answer, correctAnswer]);
+  }, [answer, correctAnswer, setStopTimer]);
+
+  let TimeIcon = () =>
+    React.createElement(SVG.timeSVG, { width: 40, height: 40 });
 
   let CodeEditor = () => {
     return (
@@ -105,6 +119,10 @@ export default function LevelScene(props: Props) {
     );
   };
 
+  let onChangeAnswerField = (value: string) => {
+    setAnswer(value);
+  };
+
   let onBackButtonPressed = () => {
     props.navigation.goBack();
   };
@@ -113,16 +131,23 @@ export default function LevelScene(props: Props) {
     <View style={styles.container}>
       <View style={styles.leftContainer}>
         <View style={styles.headerContainer}>
-          <Feather
-            name="arrow-left"
-            size={28}
-            color={COLORS.LEVEL_TEXT}
-            style={{ marginRight: 12 }}
-            onPress={onBackButtonPressed}
-          />
-          <Text style={styles.levelNameText}>
-            {stageName} - {levelNo}
-          </Text>
+          <View style={styles.leftHeaderContainer}>
+            <Feather
+              name="arrow-left"
+              size={28}
+              color={COLORS.LEVEL_TEXT}
+              style={{ marginRight: 12 }}
+              onPress={onBackButtonPressed}
+            />
+            <Text style={styles.levelHeaderText}>
+              {stageName} - {levelNo}
+            </Text>
+          </View>
+
+          <View style={styles.rightHeaderContainer}>
+            <TimeIcon />
+            <Text style={styles.levelHeaderText}>{msToTime(currentTime)}</Text>
+          </View>
         </View>
 
         <ScrollView contentContainerStyle={styles.contentContainer}>
@@ -170,7 +195,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     maxHeight: 1000,
   },
-  levelNameText: {
+  levelHeaderText: {
     fontSize: FONT_SIZE.HEADER1,
     color: COLORS.LEVEL_TEXT,
     fontWeight: 'bold',
@@ -220,6 +245,15 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     marginBottom: 36,
+    justifyContent: 'space-between',
+  },
+  leftHeaderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rightHeaderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   expectedResultText: {
     fontWeight: '700',

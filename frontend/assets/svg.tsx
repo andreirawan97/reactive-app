@@ -6,6 +6,31 @@ type SVGProps = {
   fill?: string;
 };
 
+let timeSVG = ({ width, height }: SVGProps) => (
+  <svg width={width} height={height} viewBox="0 0 48.764 48.764">
+    <path data-name="Path 188" d="M0 0h48.764v48.764H0z" fill="none" />
+    <path
+      data-name="Path 189"
+      d="M12.191 4.064v12.191h.02l-.02.02 8.127 8.107-8.127 8.128.02.02h-.02v12.171h24.382V32.53h-.02l.02-.02-8.127-8.127 8.127-8.107-.02-.02h.02V4.064zM32.51 33.526v7.111H16.255v-7.111l8.127-8.127zm-8.128-10.162l-8.127-8.127V8.128H32.51v7.111z"
+      fill="#06a3a3"
+    />
+  </svg>
+);
+
+let lockSVG = ({ width, height }: SVGProps) => (
+  <svg width={width} height={height} viewBox="0 0 69.917 69.917">
+    <g data-name="Group 46" fill="none">
+      <path data-name="Path 185" d="M0 0h69.917v69.917H0z" />
+      <path data-name="Path 186" d="M0 0h69.917v69.917H0z" opacity={0.87} />
+    </g>
+    <path
+      data-name="Path 368"
+      d="M52.311 24.742h-2.833v-5.666a14.163 14.163 0 10-28.327 0v5.665h-2.833a5.682 5.682 0 00-5.665 5.666v28.327a5.682 5.682 0 005.665 5.665h33.993a5.682 5.682 0 005.665-5.665V30.407a5.682 5.682 0 00-5.665-5.665zm-25.495-5.666a8.5 8.5 0 0117 0v5.665h-17zm25.495 39.658H18.318V30.407h33.993zm-17-8.5a5.665 5.665 0 10-5.658-5.663 5.682 5.682 0 005.661 5.665z"
+      fill="#ffffff"
+    />
+  </svg>
+);
+
 let homeStartSVG = ({ width, height }: SVGProps) => (
   <svg width={width} height={height} viewBox="0 0 576.158 380.192">
     <defs>
@@ -705,6 +730,8 @@ const SVG = {
   achievementSVG,
   friendListSVG,
   helloWorldSVG,
+  lockSVG,
+  timeSVG,
 };
 
 export default SVG;

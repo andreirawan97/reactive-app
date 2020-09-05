@@ -7,6 +7,8 @@ export const helloWorldLevels: Array<Level> = [
   {
     type: 'fillCode',
     stageName: 'Hello World',
+    timeLimit: 120000,
+    difficulty: 1,
     levelNo: 1,
     content: [
       'Text is one of the most important element in mobile app. For example the one that you are looking at. Yes this one.',
@@ -54,6 +56,8 @@ export const helloWorldLevels: Array<Level> = [
   {
     type: 'fillCode',
     stageName: 'Hello World',
+    timeLimit: 60000,
+    difficulty: 1,
     levelNo: 2,
     content: [
       `Make another Text that says "I Am Groot". Without the quotation mark of course.`,

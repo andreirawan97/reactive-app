@@ -3,11 +3,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { AuthScene, MainScene, LevelScene } from '../scenes';
-import { getStorage } from '../helpers/storage';
+import { getFromStorage } from '../helpers/storage';
 import { LOCALSTORAGE_KEYS } from '../constants/keys';
+import { decodeToken } from '../helpers/token';
 
 export default function MainNavigator() {
-  let isLogin = getStorage(LOCALSTORAGE_KEYS.IS_LOGGED_IN) || false;
+  const token = getFromStorage(LOCALSTORAGE_KEYS.TOKEN) || '';
+  const decodedToken = decodeToken(token);
 
   const Stack = createStackNavigator();
 
@@ -26,7 +28,7 @@ export default function MainNavigator() {
 
   return (
     <NavigationContainer>
-      {isLogin ? <MainStackNavigator /> : <AuthStackNavigator />}
+      {decodedToken ? <MainStackNavigator /> : <AuthStackNavigator />}
     </NavigationContainer>
   );
 }

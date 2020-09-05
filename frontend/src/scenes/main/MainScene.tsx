@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
@@ -9,14 +9,22 @@ import { COLORS } from '../../constants/styles';
 import { NavigationScreenProps } from '../../types/navigation';
 import { Fetcher, Loading } from '../../core-ui';
 import { emptyUserData, UserData } from '../../fixtures/user';
-import { firebase } from '../../firebase/config';
+import { FIREBASE_URL, ENDPOINT } from '../../constants/network';
+import homebrewFetch from '../../helpers/homebrewFetch';
+import { getFromStorage, clearStorage } from '../../helpers/storage';
+import { LOCALSTORAGE_KEYS } from '../../constants/keys';
 
 import { HomeScene, JourneyScene, ShopScene, LeaderboardScene } from './drawer';
+import { decodeToken } from '../../helpers/token';
+import { Response } from '../../types/firestore';
 
 type Props = {} & NavigationScreenProps;
 
 export default function MainScene(props: Props) {
   let [userData, setUserData] = useState(emptyUserData);
+
+  const URL = `${FIREBASE_URL}${ENDPOINT.GET_USER_DATA}`;
+  const requestBody = { token: getFromStorage(LOCALSTORAGE_KEYS.TOKEN) };
 
   const DRAWER_CONTENTS: Array<Content> = [
     {
@@ -65,18 +73,28 @@ export default function MainScene(props: Props) {
     },
   ];
 
-  useFocusEffect(() => {
-    // Re-fetch when focus and re-focus
-    console.log('focused');
-    firebase.analytics();
-  });
+  let onSuccessFetch = (response: Response) => {
+    let { success } = response;
 
-  let onSuccessFetch = (data: Record<string, unknown>) => {
-    setUserData(data as UserData);
+    if (success) {
+      let { token } = response;
+      let data = decodeToken(token as string);
+      setUserData(data as UserData);
+    } else {
+      // TODO: show error then,
+      clearStorage();
+      window.location.reload();
+    }
   };
 
   return (
-    <Fetcher url="" onSuccess={onSuccessFetch} fallback={Loading}>
+    <Fetcher
+      method="POST"
+      URL={URL}
+      requestBody={requestBody}
+      onSuccess={onSuccessFetch}
+      fallback={Loading}
+    >
       <View style={styles.container}>
         <Drawer contents={DRAWER_CONTENTS} userData={userData} />
       </View>

@@ -1,36 +1,57 @@
 import React, { ReactNode, useState, ReactElement, useEffect } from 'react';
-import { userDataMock } from '../fixtures/user';
+
+import homebrewFetch from '../helpers/homebrewFetch';
+import { Response } from '../types/firestore';
+
+import Loading from './Loading';
 
 type Props = {
-  url: string;
-  requestOptions?: RequestInit;
-  onSuccess: (data: Record<string, unknown>) => void;
+  method: 'GET' | 'POST';
+  URL: string;
+  requestBody?: object;
+  onSuccess: (data: Response) => void;
   onFailure?: (err: Error) => void;
-  fallback: () => ReactElement; // Ini di render kalo masih loading
+  fallback?: () => ReactElement; // Ini di render kalo masih loading
   children: ReactNode;
 };
 export default function Fetcher(props: Props) {
-  let { fallback, url, requestOptions, onSuccess, onFailure } = props;
+  let {
+    method,
+    fallback = Loading,
+    URL,
+    requestBody = {},
+    onSuccess,
+    onFailure,
+  } = props;
 
   let [isFetching, setFetching] = useState(true);
 
-  useEffect(() => {
-    fetch(url, requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        setFetching(false);
-        onSuccess(data);
-      })
-      .catch((err) => {
-        onFailure && onFailure(err);
-      });
+  // let request = useCallback(async () => {
+  //   try {
+  //     let response = await homebrewFetch(method, URL, requestBody);
+  //     let data = await response.json();
+  //     setFetching(false);
+  //     onSuccess(data);
+  //   } catch (err) {
+  //     onFailure && onFailure(err);
+  //   }
+  // }, []);
 
-    // setFetching(false);
-    // onSuccess(userDataMock);
-  }, [url, requestOptions, onSuccess, onFailure]);
+  useEffect(() => {
+    try {
+      homebrewFetch(method, URL, requestBody)
+        .then((response) => response.json())
+        .then((data) => {
+          setFetching(false);
+          onSuccess(data);
+        });
+    } catch (err) {
+      onFailure && onFailure(err);
+    }
+  }, []);
 
   if (isFetching) {
-    return fallback();
+    return fallback ? fallback() : <Loading />;
   } else {
     return <>{props.children}</>;
   }

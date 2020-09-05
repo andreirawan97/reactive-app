@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,10 +10,32 @@ import {
 import { journey, Section, Stage } from '../../../data/journey';
 import { FONT_SIZE, COLORS } from '../../../constants/styles';
 import { NavigationScreenProps } from '../../../types/navigation';
+import { FIREBASE_URL, ENDPOINT } from '../../../constants/network';
+import { decodeToken } from '../../../helpers/token';
+import { getFromStorage } from '../../../helpers/storage';
+import { LOCALSTORAGE_KEYS } from '../../../constants/keys';
+import { Fetcher } from '../../../core-ui';
+import { Response } from '../../../types/firestore';
+import { UserJourney, dummyUserJourney } from '../../../fixtures/journey';
+import SVG from '../../../../assets/svg';
 
 type Props = {} & NavigationScreenProps;
 export default function JourneyScene(props: Props) {
+  const [userJourney, setUserJourney] = useState<UserJourney>(dummyUserJourney);
+
+  const getUserJourneyURL = `${FIREBASE_URL}${ENDPOINT.GET_USER_JOURNEY}`;
+  const token = getFromStorage(LOCALSTORAGE_KEYS.TOKEN);
+
+  const onSuccessFetch = (response: Response) => {
+    let { token } = response;
+    let data = decodeToken(token) as UserJourney;
+    setUserJourney(data);
+  };
+
   let currentStage = journey[0].stages[0];
+
+  let LockIcon = () =>
+    React.createElement(SVG.lockSVG, { width: 50, height: 50 });
 
   let StageComponent = (props: Stage) => {
     let { name, icon } = props;
@@ -54,36 +76,55 @@ export default function JourneyScene(props: Props) {
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.stagesContainer}>
-        {journey.map((section, i) => (
-          <SectionComponent
-            key={i}
-            index={i}
-            name={section.name}
-            stages={section.stages}
-          />
-        ))}
-      </ScrollView>
-      <View style={styles.levelsContainer}>
-        <Text style={styles.levelsStageNameText}>{currentStage.name}</Text>
-        <Text style={styles.stageDescriptionText}>
-          {currentStage.description}
-        </Text>
-
-        <View style={styles.levelsSelectorContainer}>
-          {currentStage.levels.map((level, i) => (
-            <TouchableOpacity
+    <Fetcher
+      method="POST"
+      URL={getUserJourneyURL}
+      onSuccess={onSuccessFetch}
+      requestBody={{ token }}
+    >
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.stagesContainer}>
+          {journey.map((section, i) => (
+            <SectionComponent
               key={i}
-              style={styles.levelSelector}
-              onPress={() => props.navigation.navigate('LevelScene', level)}
-            >
-              <Text style={styles.levelText}>{i + 1}</Text>
-            </TouchableOpacity>
+              index={i}
+              name={section.name}
+              stages={section.stages}
+            />
           ))}
+        </ScrollView>
+        <View style={styles.levelsContainer}>
+          <Text style={styles.levelsStageNameText}>{currentStage.name}</Text>
+          <Text style={styles.stageDescriptionText}>
+            {currentStage.description}
+          </Text>
+
+          <View style={styles.levelsSelectorContainer}>
+            {currentStage.levels.map((level, i) => {
+              if (userJourney[currentStage.id][i].unlocked) {
+                return (
+                  <TouchableOpacity
+                    key={i}
+                    style={styles.levelSelector}
+                    onPress={() =>
+                      props.navigation.navigate('LevelScene', level)
+                    }
+                  >
+                    <Text style={styles.levelText}>{i + 1}</Text>
+                  </TouchableOpacity>
+                );
+              } else {
+                return (
+                  <TouchableOpacity key={i} style={styles.lockedLevelSelector}>
+                    <LockIcon />
+                  </TouchableOpacity>
+                );
+              }
+            })}
+          </View>
         </View>
       </View>
-    </View>
+    </Fetcher>
   );
 }
 
@@ -159,6 +200,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.PRIMARY,
+    marginBottom: 20,
+    marginRight: 20,
+  },
+  lockedLevelSelector: {
+    borderRadius: 20,
+    height: 90,
+    width: 90,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#a0a0a0',
     marginBottom: 20,
     marginRight: 20,
   },

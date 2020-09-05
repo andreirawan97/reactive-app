@@ -1,4 +1,4 @@
-export type AchievementId = '' | 'helloWorld' | 'aPerspective';
+export type AchievementId = 'helloWorld' | 'aPerspective';
 type Achievement = {
   id: AchievementId;
   name: string;
