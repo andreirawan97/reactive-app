@@ -21,6 +21,7 @@ import { FIREBASE_URL, ENDPOINT } from '../../../constants/network';
 import { decodeToken } from '../../../helpers/token';
 import { Response } from '../../../types/firestore';
 import { UserAchievements } from '../../../fixtures/achievements';
+import { showModal } from '../../../core-ui/ModalProvider';
 
 const tokenReqBody = { token: getFromStorage(LOCALSTORAGE_KEYS.TOKEN) };
 
@@ -42,6 +43,16 @@ export default function HomeScene(props: Props) {
     let data = decodeToken(token) as UserAchievements;
     setUserAchievements(data);
   }, []);
+
+  let viewAllAchievements = () => {
+    showModal({
+      content: () => <></>,
+      title: 'Achievements',
+      containerStyle: {
+        width: '60%',
+      },
+    });
+  };
 
   let HomeStart = () =>
     React.createElement(SVG.homeStartSVG, { width: 450, height: 450 });
@@ -67,7 +78,7 @@ export default function HomeScene(props: Props) {
 
       <Button
         title="View All"
-        onPress={() => {}}
+        onPress={viewAllAchievements}
         containerStyle={{
           borderRadius: 21,
           height: 42,
@@ -132,7 +143,7 @@ export default function HomeScene(props: Props) {
 
             <Button
               title="View All"
-              onPress={() => {}}
+              onPress={viewAllAchievements}
               containerStyle={{
                 borderRadius: 21,
                 height: 42,

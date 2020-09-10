@@ -69,6 +69,22 @@ export default function ModalProvider(props: Props) {
     title,
   } = config;
 
+  useEffect(() => {
+    modalEmitter.addListener('showModal', (modalConfig: ModalConfig) => {
+      if (!isShowing) {
+        setShowing(true);
+        setConfig({
+          ...config,
+          ...modalConfig,
+        });
+      }
+    });
+
+    return () => {
+      modalEmitter.removeAllListeners();
+    };
+  }, [isShowing, config]);
+
   let closeModal = () => {
     Animated.parallel([
       Animated.spring(animatedSpringValue, {
