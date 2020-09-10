@@ -1,17 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 import { NavigationScreenProps } from '../../types/navigation';
 import { COLORS, FONT_SIZE } from '../../constants/styles';
-import { Level } from '../../data/journey';
-import { Phone } from '../../components';
-import { msToTime } from '../../helpers/format';
+import { Level, StageId } from '../../data/journey';
+import { Phone, RewardList } from '../../components';
+import { msToTime, msToCompletionTime } from '../../helpers/format';
 import SVG from '../../../assets/svg';
+import { showModal, closeModal } from '../../core-ui/ModalProvider';
+import { calculateScore, rollRewards } from '../../helpers/level';
+import { Reward } from '../../data/rewards';
+import { UserLevelData, UserJourney } from '../../fixtures/journey';
+import { Button } from '../../core-ui';
+import homebrewFetch from '../../helpers/homebrewFetch';
+import { FIREBASE_URL, ENDPOINT } from '../../constants/network';
+import { decodeToken, encodeToken } from '../../helpers/token';
+import { getFromStorage } from '../../helpers/storage';
+import { LOCALSTORAGE_KEYS } from '../../constants/keys';
+import { Response } from '../../types/firestore';
 
 type Props = {} & NavigationScreenProps;
 
+const UPDATE_JOURNEY_PROGRESS_URL = `${FIREBASE_URL}${ENDPOINT.UPDATE_JOURNEY_PROGRESS}`;
+
 export default function LevelScene(props: Props) {
+  let { currentLevelData, currentLevelUserData, stageId } = props.route
+    .params as {
+    currentLevelData: Level;
+    currentLevelUserData: UserJourney;
+    stageId: StageId;
+  };
+
   let {
     codeContent,
     content,
@@ -21,37 +41,52 @@ export default function LevelScene(props: Props) {
     correctAnswer,
     difficulty,
     timeLimit,
-  } = props.route.params as Level;
+    chanceRewards,
+    firstTimeRewards,
+  } = currentLevelData;
+  let { isFirstTime } = currentLevelUserData[stageId][levelNo - 1];
 
   const [answer, setAnswer] = useState('');
   const [currentTime, setCurrentTime] = useState(timeLimit);
   const [stopTimer, setStopTimer] = useState(false);
+  const [score, setScore] = useState(0);
+  const [rewards, setRewards] = useState<Array<Reward>>();
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (!stopTimer) {
-        setCurrentTime(currentTime - 1000);
-      }
-    }, 1000);
+  let onHomeButtonPress = useCallback(() => {
+    closeModal();
+    props.navigation.goBack();
+  }, [props.navigation]);
 
-    // Time's up
-    if (currentTime === 0) {
-      clearInterval(intervalId);
-    }
+  let onTryAgainPress = () => {
+    closeModal();
+    setCurrentTime(timeLimit);
+    setStopTimer(false);
+    setAnswer('');
+  };
 
-    return () => {
-      clearInterval(intervalId);
+  let updateJourneyProgress = useCallback(() => {
+    let requestBodyObject = {
+      email: decodeToken(getFromStorage(LOCALSTORAGE_KEYS.TOKEN) || ''),
+      id: stageId,
+      levelNo,
+      score,
+      rewards,
     };
-  }, [currentTime, stopTimer]);
+    let requestBody = { token: encodeToken(requestBodyObject) };
 
-  useEffect(() => {
-    if (answer === correctAnswer) {
-      setStopTimer(true);
-    }
-  }, [answer, correctAnswer, setStopTimer]);
+    homebrewFetch('POST', UPDATE_JOURNEY_PROGRESS_URL, requestBody)
+      .then((response) => response.json())
+      .then((data: Response) => {
+        console.log(data);
+      });
+  }, [levelNo, score, stageId, rewards]);
 
   let TimeIcon = () =>
     React.createElement(SVG.timeSVG, { width: 40, height: 40 });
+  let FinishedIcon = () =>
+    React.createElement(SVG.finishSVG, { width: 110, height: 110 });
+  let FailedIcon = () =>
+    React.createElement(SVG.failedSVG, { width: 110, height: 110 });
 
   let CodeEditor = () => {
     return (
@@ -118,6 +153,142 @@ export default function LevelScene(props: Props) {
       </View>
     );
   };
+
+  let FinishedModalContent = useCallback(() => {
+    const scoreTmp = calculateScore(currentTime, timeLimit, difficulty);
+    setScore(scoreTmp);
+
+    const finalRewards: Array<Reward> = isFirstTime
+      ? [...firstTimeRewards]
+      : [];
+    chanceRewards.forEach((chanceReward) => {
+      if (rollRewards(chanceReward)) {
+        finalRewards.push(chanceReward);
+      }
+    });
+
+    setRewards(finalRewards);
+
+    return (
+      <View style={styles.modalContentContainer}>
+        <FinishedIcon />
+        <Text style={styles.modalHeaderText}>Finished!</Text>
+        <Text style={styles.modalCompletionTimeText}>
+          Completion time: {msToCompletionTime(currentTime)}
+        </Text>
+        <Text style={styles.modalScoreText}>Score: {scoreTmp}</Text>
+
+        <RewardList rewards={finalRewards} />
+
+        <Button
+          title="Back"
+          onPress={onHomeButtonPress}
+          backgroundColor={COLORS.PRIMARY}
+          titleColor={COLORS.PRIMARY_TEXT}
+          containerStyle={{
+            width: 140,
+            borderRadius: 28,
+            marginTop: 20,
+            height: 48,
+          }}
+          titleStyle={{
+            fontWeight: 'normal',
+            fontSize: 18,
+          }}
+        />
+      </View>
+    );
+  }, [
+    currentTime,
+    difficulty,
+    timeLimit,
+    chanceRewards,
+    firstTimeRewards,
+    isFirstTime,
+    onHomeButtonPress,
+  ]);
+
+  let FailedModalContent = useCallback(() => {
+    return (
+      <View style={styles.modalContentContainer}>
+        <FailedIcon />
+        <Text style={styles.modalHeaderText}>Failed! :(</Text>
+        <Text style={{ marginVertical: 12, fontSize: 18 }}>Time is up!</Text>
+
+        <Button
+          title="Try Again"
+          onPress={onTryAgainPress}
+          backgroundColor={COLORS.PASTEL_SALMON}
+          titleColor={COLORS.PRIMARY_TEXT}
+          containerStyle={{
+            width: 180,
+            borderRadius: 28,
+            marginTop: 20,
+            height: 48,
+          }}
+          titleStyle={{
+            fontWeight: 'normal',
+            fontSize: 18,
+          }}
+        />
+
+        <Button
+          title="Home"
+          onPress={onHomeButtonPress}
+          backgroundColor={COLORS.PRIMARY}
+          titleColor={COLORS.PRIMARY_TEXT}
+          containerStyle={{
+            width: 140,
+            borderRadius: 28,
+            marginTop: 20,
+            height: 48,
+          }}
+          titleStyle={{
+            fontWeight: 'normal',
+            fontSize: 18,
+          }}
+        />
+      </View>
+    );
+  }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (!stopTimer) {
+        setCurrentTime(currentTime - 1000);
+      }
+    }, 1000);
+
+    // Time's up
+    if (currentTime === 0) {
+      clearInterval(intervalId);
+      showModal({
+        content: FailedModalContent,
+        showCloseButton: false,
+      });
+    }
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [currentTime, stopTimer, FailedModalContent]);
+
+  useEffect(() => {
+    if (answer === correctAnswer) {
+      setStopTimer(true);
+      showModal({
+        content: FinishedModalContent,
+        showCloseButton: false,
+      });
+      updateJourneyProgress();
+    }
+  }, [
+    answer,
+    correctAnswer,
+    setStopTimer,
+    FinishedModalContent,
+    updateJourneyProgress,
+  ]);
 
   let onChangeAnswerField = (value: string) => {
     setAnswer(value);
@@ -259,5 +430,24 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: COLORS.PRIMARY_TEXT,
     fontSize: 20,
+  },
+  modalContentContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalHeaderText: {
+    marginTop: 12,
+    fontSize: FONT_SIZE.HEADER1,
+    fontWeight: 'bold',
+  },
+  modalCompletionTimeText: {
+    fontSize: 18,
+    marginTop: 12,
+  },
+  modalScoreText: {
+    fontSize: 18,
+    marginVertical: 12,
+    fontWeight: 'bold',
   },
 });

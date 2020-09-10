@@ -11,9 +11,10 @@ import { Avatar } from 'react-native-elements';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { COLORS } from '../constants/styles';
-import { CurrencyLogo, TestProfilePicture } from '../../assets';
+import { CurrencyIcon } from '../../assets';
 import { UserData } from '../fixtures/user';
 import { clearStorage } from '../helpers/storage';
+import { getAvatarSource } from '../helpers/avatar';
 
 export type Content = {
   title: string;
@@ -23,18 +24,16 @@ export type Content = {
 type Props = {
   userData: UserData;
   contents: Array<Content>;
+  defaultIndex?: number;
 };
 
 export default function Drawer(props: Props) {
-  /**
-   * TO-DO:
-   * 1. Gambar profile
-   *
-   */
-  let { contents, userData } = props;
-  let { border, currency, currentExp, name } = userData;
+  let { contents, userData, defaultIndex } = props;
+  let { border, currency, currentExp, name, avatar } = userData;
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(
+    defaultIndex ? defaultIndex : 0,
+  );
   const animatedTranslateValue = new Animated.Value(150);
   const animatedFadeValue = new Animated.Value(0);
 
@@ -44,7 +43,11 @@ export default function Drawer(props: Props) {
   };
 
   let ProgressBar = () => {
-    let currentPercentage = 80; // TODO: Calculate it.
+    let milestoneExp = Math.floor(currentExp / 1000) * 1000 + 1000;
+    console.log(milestoneExp);
+
+    let currentPercentage = (milestoneExp - currentExp) * 0.01;
+    console.log(currentPercentage);
     return (
       <View
         style={{
@@ -98,7 +101,7 @@ export default function Drawer(props: Props) {
         <View style={styles.userInfoContainer}>
           <Avatar
             rounded
-            source={TestProfilePicture}
+            source={getAvatarSource(avatar)}
             size="large"
             containerStyle={[
               styles.avatarContainer,
@@ -117,7 +120,7 @@ export default function Drawer(props: Props) {
 
           <View style={styles.currencyContainer}>
             <Image
-              source={CurrencyLogo}
+              source={CurrencyIcon}
               style={{
                 width: 24,
                 height: 20,
@@ -131,7 +134,7 @@ export default function Drawer(props: Props) {
           </View>
 
           <Text style={styles.level}>
-            Level {Math.floor(currentExp / 1000)} ({currentExp} EXP)
+            Level {Math.floor(currentExp / 1000) + 1} ({currentExp} EXP)
           </Text>
           <ProgressBar />
         </View>

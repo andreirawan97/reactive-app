@@ -1,6 +1,6 @@
 import { iphone6 as ImageIphone6 } from '../../../assets/phone_skins';
 
-export const iphone6 = {
+const iphone6 = {
   id: 'iphone6',
   name: 'iPhone 6',
   source: ImageIphone6,
@@ -17,3 +17,5 @@ export const iphone6 = {
     height: 312,
   },
 };
+
+export default iphone6;
