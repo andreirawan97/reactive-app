@@ -71,19 +71,21 @@ export default function AuthScene() {
         onSignupSuccess(token);
       } else {
         setErrorMessageSignup(message);
+        setRequesting(false);
       }
-      setRequesting(false);
     }
   };
 
   let onLoginSuccess = (token: string) => {
     setToStorage(LOCALSTORAGE_KEYS.TOKEN, token);
     window.location.reload();
+    setRequesting(false);
   };
 
   let onSignupSuccess = (token: string) => {
     setToStorage(LOCALSTORAGE_KEYS.TOKEN, token);
     window.location.reload();
+    setRequesting(false);
   };
 
   const LoginForm = () => (

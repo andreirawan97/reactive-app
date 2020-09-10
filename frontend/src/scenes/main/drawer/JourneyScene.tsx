@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -19,20 +19,20 @@ import { Response } from '../../../types/firestore';
 import { UserJourney, dummyUserJourney } from '../../../fixtures/journey';
 import SVG from '../../../../assets/svg';
 
+const getUserJourneyURL = `${FIREBASE_URL}${ENDPOINT.GET_USER_JOURNEY}`;
+const token = { token: getFromStorage(LOCALSTORAGE_KEYS.TOKEN) };
+
 type Props = {} & NavigationScreenProps;
+
 export default function JourneyScene(props: Props) {
   const [userJourney, setUserJourney] = useState<UserJourney>(dummyUserJourney);
+  const [currentStage, setCurrentStage] = useState(journey[0].stages[0]);
 
-  const getUserJourneyURL = `${FIREBASE_URL}${ENDPOINT.GET_USER_JOURNEY}`;
-  const token = getFromStorage(LOCALSTORAGE_KEYS.TOKEN);
-
-  const onSuccessFetch = (response: Response) => {
+  const onSuccessFetch = useCallback((response: Response) => {
     let { token } = response;
     let data = decodeToken(token) as UserJourney;
     setUserJourney(data);
-  };
-
-  let currentStage = journey[0].stages[0];
+  }, []);
 
   let LockIcon = () =>
     React.createElement(SVG.lockSVG, { width: 50, height: 50 });
@@ -44,7 +44,7 @@ export default function JourneyScene(props: Props) {
     return (
       <TouchableOpacity
         style={styles.stageContainer}
-        onPress={() => (currentStage = props)}
+        onPress={() => setCurrentStage(props)}
       >
         <View style={styles.stageIcon}>
           <StageIcon />
@@ -80,7 +80,7 @@ export default function JourneyScene(props: Props) {
       method="POST"
       URL={getUserJourneyURL}
       onSuccess={onSuccessFetch}
-      requestBody={{ token }}
+      requestBody={token}
     >
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.stagesContainer}>
@@ -107,7 +107,11 @@ export default function JourneyScene(props: Props) {
                     key={i}
                     style={styles.levelSelector}
                     onPress={() =>
-                      props.navigation.navigate('LevelScene', level)
+                      props.navigation.navigate('LevelScene', {
+                        currentLevelData: level,
+                        currentLevelUserData: userJourney,
+                        stageId: currentStage.id,
+                      })
                     }
                   >
                     <Text style={styles.levelText}>{i + 1}</Text>

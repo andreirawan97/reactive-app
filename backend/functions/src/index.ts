@@ -55,7 +55,7 @@ export const signup = functions.https.onRequest(async (req, res) => {
     name: "",
     currency: 0,
     currentExp: 0,
-    profilePicBase64: "",
+    avatar: "noAvatar",
     border: "",
   };
   const emptyFriendList = {
@@ -124,7 +124,6 @@ export const signup = functions.https.onRequest(async (req, res) => {
 
 export const getUserData = functions.https.onRequest(async (req, res) => {
   let { token } = JSON.parse(req.body);
-  console.log(token);
 
   try {
     let email = jwt.verify(token, SECRET_KEY) as string;
@@ -218,3 +217,83 @@ export const getUserJourney = functions.https.onRequest(async (req, res) => {
     });
   }
 });
+
+export const updateJourneyProgress = functions.https.onRequest(
+  async (req, res) => {
+    let { token } = JSON.parse(req.body);
+
+    let { email, id, levelNo, score, rewards } = jwt.verify(
+      token,
+      SECRET_KEY
+    ) as {
+      email: string;
+      id: string;
+      levelNo: number;
+      score: number;
+      rewards: Array<any>;
+    };
+
+    const journeySnapshot = await firestore
+      .collection(COLLECTION_NAME.JOURNEY)
+      .doc(email)
+      .get();
+    const userSnapshot = await firestore
+      .collection(COLLECTION_NAME.USERS)
+      .doc(email)
+      .get();
+
+    const journeyData = journeySnapshot.data();
+    const userData = userSnapshot.data();
+
+    if (journeyData && userData) {
+      journeyData[id][levelNo - 1].highScore =
+        score > journeyData[id][levelNo - 1].highScore
+          ? score
+          : journeyData[id][levelNo - 1].highScore;
+      journeyData[id][levelNo - 1].isFirstTime = false;
+
+      if (journeyData[id][levelNo]) {
+        journeyData[id][levelNo].unlocked = true;
+      }
+
+      rewards.forEach((reward) => {
+        switch (reward.id) {
+          case "exp": {
+            userData.currentExp += reward.value;
+            break;
+          }
+          case "currency": {
+            userData.currency += reward.value;
+            break;
+          }
+          default: {
+          }
+        }
+      });
+
+      await firestore
+        .collection(COLLECTION_NAME.JOURNEY)
+        .doc(email)
+        .set(journeyData);
+
+      await firestore
+        .collection(COLLECTION_NAME.USERS)
+        .doc(email)
+        .set(userData);
+
+      res.set({ "Access-Control-Allow-Origin": "*" });
+      res.send({
+        success: true,
+        message: "OK.",
+        token: "",
+      });
+    } else {
+      res.set({ "Access-Control-Allow-Origin": "*" });
+      res.send({
+        success: false,
+        message: "Error occured. No user found!",
+        token: "",
+      });
+    }
+  }
+);

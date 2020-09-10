@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useFocusEffect } from '@react-navigation/native';
 
 import { Drawer } from '../../components';
 import { Content } from '../../components/Drawer';
@@ -10,21 +9,20 @@ import { NavigationScreenProps } from '../../types/navigation';
 import { Fetcher, Loading } from '../../core-ui';
 import { emptyUserData, UserData } from '../../fixtures/user';
 import { FIREBASE_URL, ENDPOINT } from '../../constants/network';
-import homebrewFetch from '../../helpers/homebrewFetch';
 import { getFromStorage, clearStorage } from '../../helpers/storage';
 import { LOCALSTORAGE_KEYS } from '../../constants/keys';
-
-import { HomeScene, JourneyScene, ShopScene, LeaderboardScene } from './drawer';
 import { decodeToken } from '../../helpers/token';
 import { Response } from '../../types/firestore';
 
+import { HomeScene, JourneyScene, ShopScene, LeaderboardScene } from './drawer';
+
 type Props = {} & NavigationScreenProps;
+
+const URL = `${FIREBASE_URL}${ENDPOINT.GET_USER_DATA}`;
+const REQUEST_BODY = { token: getFromStorage(LOCALSTORAGE_KEYS.TOKEN) };
 
 export default function MainScene(props: Props) {
   let [userData, setUserData] = useState(emptyUserData);
-
-  const URL = `${FIREBASE_URL}${ENDPOINT.GET_USER_DATA}`;
-  const requestBody = { token: getFromStorage(LOCALSTORAGE_KEYS.TOKEN) };
 
   const DRAWER_CONTENTS: Array<Content> = [
     {
@@ -73,7 +71,7 @@ export default function MainScene(props: Props) {
     },
   ];
 
-  let onSuccessFetch = (response: Response) => {
+  let onSuccessFetch = useCallback((response: Response) => {
     let { success } = response;
 
     if (success) {
@@ -85,13 +83,13 @@ export default function MainScene(props: Props) {
       clearStorage();
       window.location.reload();
     }
-  };
+  }, []);
 
   return (
     <Fetcher
       method="POST"
       URL={URL}
-      requestBody={requestBody}
+      requestBody={REQUEST_BODY}
       onSuccess={onSuccessFetch}
       fallback={Loading}
     >

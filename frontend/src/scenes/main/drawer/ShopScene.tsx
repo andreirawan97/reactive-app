@@ -14,6 +14,10 @@ export default function ShopScene(props: Props) {
 
   let contents: Array<Content> = [
     {
+      headerText: 'Avatar',
+      component: testScene,
+    },
+    {
       headerText: 'Avatar Border',
       component: testScene,
     },
@@ -22,6 +26,7 @@ export default function ShopScene(props: Props) {
       component: testScene,
     },
   ];
+
   return (
     <View style={styles.container}>
       <Switcher contents={contents} />

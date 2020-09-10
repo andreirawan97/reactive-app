@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -23,6 +23,10 @@ import { Response } from '../../../types/firestore';
 import { UserAchievements } from '../../../fixtures/achievements';
 import { showModal } from '../../../core-ui/ModalProvider';
 
+const tokenReqBody = { token: getFromStorage(LOCALSTORAGE_KEYS.TOKEN) };
+
+const getUserAchievementsURL = `${FIREBASE_URL}${ENDPOINT.GET_USER_ACHIEVEMENTS}`;
+
 type Props = {} & NavigationScreenProps;
 
 export default function HomeScene(props: Props) {
@@ -34,14 +38,11 @@ export default function HomeScene(props: Props) {
     },
   });
 
-  const token = getFromStorage(LOCALSTORAGE_KEYS.TOKEN);
-  const getUserAchievementsURL = `${FIREBASE_URL}${ENDPOINT.GET_USER_ACHIEVEMENTS}`;
-
-  let onSuccessGetUserAchievements = (response: Response) => {
+  let onSuccessGetUserAchievements = useCallback((response: Response) => {
     let { token } = response;
     let data = decodeToken(token) as UserAchievements;
     setUserAchievements(data);
-  };
+  }, []);
 
   let viewAllAchievements = () => {
     showModal({
@@ -105,7 +106,7 @@ export default function HomeScene(props: Props) {
       <Fetcher
         method="POST"
         URL={getUserAchievementsURL}
-        requestBody={{ token }}
+        requestBody={tokenReqBody}
         onSuccess={onSuccessGetUserAchievements}
       >
         {userAchievements?.latestAchievementId === '' ? (

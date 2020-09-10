@@ -38,6 +38,10 @@ export let showModal = (modalConfig: ModalConfig) => {
   modalEmitter.emit('showModal', modalConfig);
 };
 
+export let closeModal = () => {
+  modalEmitter.emit('closeModal');
+};
+
 export default function ModalProvider(props: Props) {
   const initialConfig: ModalConfig = {
     content: () => <></>,
@@ -147,6 +151,28 @@ export default function ModalProvider(props: Props) {
     );
   };
 
+  useEffect(() => {
+    modalEmitter.addListener('showModal', (modalConfig: ModalConfig) => {
+      if (!isShowing) {
+        setShowing(true);
+        setConfig({
+          ...config,
+          ...modalConfig,
+        });
+      }
+    });
+
+    modalEmitter.addListener('closeModal', () => {
+      if (isShowing) {
+        closeModal();
+      }
+    });
+
+    return () => {
+      modalEmitter.removeAllListeners();
+    };
+  }, [isShowing, config, closeModal]);
+
   return (
     <Fragment>
       {props.children}
@@ -174,7 +200,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     position: 'absolute',
     minWidth: 500,
-    minHeight: 500,
+    maxHeight: 500,
     backgroundColor: 'white',
     zIndex: 2,
     borderRadius: 24,
