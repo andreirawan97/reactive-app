@@ -267,6 +267,7 @@ export const updateJourneyProgress = functions.https.onRequest(
             break;
           }
           default: {
+            break;
           }
         }
       });
