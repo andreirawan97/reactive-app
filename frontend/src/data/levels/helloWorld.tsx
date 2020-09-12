@@ -7,7 +7,25 @@ export const helloWorldLevels: Array<Level> = [
   {
     type: 'fillCode',
     stageName: 'Hello World',
-    timeLimit: 120000,
+    firstTimeRewards: [
+      {
+        id: 'currency',
+        value: 200,
+      },
+      {
+        id: 'exp',
+        value: 200,
+      },
+    ],
+    // chanceRewards: [
+    //   {
+    //     id: 'avatar',
+    //     value: '',
+    //     chance: 0.1,
+    //   },
+    // ],
+    chanceRewards: [],
+    timeLimit: 150000,
     difficulty: 1,
     levelNo: 1,
     content: [
@@ -56,7 +74,18 @@ export const helloWorldLevels: Array<Level> = [
   {
     type: 'fillCode',
     stageName: 'Hello World',
-    timeLimit: 60000,
+    firstTimeRewards: [
+      {
+        id: 'currency',
+        value: 200,
+      },
+      {
+        id: 'exp',
+        value: 200,
+      },
+    ],
+    chanceRewards: [],
+    timeLimit: 150000,
     difficulty: 1,
     levelNo: 2,
     content: [

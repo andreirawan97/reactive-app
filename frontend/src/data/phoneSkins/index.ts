@@ -1,6 +1,6 @@
 import { ImageSourcePropType } from 'react-native';
 
-import { iphone6 } from './iphone6';
+import iphone6 from './iphone6';
 
 export type PhoneSkin = {
   id: string;

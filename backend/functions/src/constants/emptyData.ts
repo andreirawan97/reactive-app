@@ -4,11 +4,13 @@ export const emptyJourneyData = {
       levelNo: 1,
       unlocked: true,
       highScore: 0,
+      isFirstTime: true,
     },
     {
       unlocked: false,
       levelNo: 2,
       highScore: 0,
+      isFirstTime: true,
     },
   ],
 };

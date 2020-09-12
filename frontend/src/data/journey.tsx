@@ -3,6 +3,7 @@ import React, { ReactElement } from 'react';
 import SVG from '../../assets/svg';
 
 import { helloWorldLevels } from './levels/helloWorld';
+import { Reward } from './rewards';
 
 export type StageId = 'helloWorld';
 
@@ -13,6 +14,8 @@ export type Code = {
 
 export type Level = {
   type: 'fillCode';
+  firstTimeRewards: Array<Reward>;
+  chanceRewards: Array<Reward>;
   stageName: string;
   levelNo: number;
   content: Array<string>;
