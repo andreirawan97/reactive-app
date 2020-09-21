@@ -20,7 +20,7 @@ import { UserJourney, dummyUserJourney } from '../../../fixtures/journey';
 import SVG from '../../../../assets/svg';
 
 const getUserJourneyURL = `${FIREBASE_URL}${ENDPOINT.GET_USER_JOURNEY}`;
-const token = { token: getFromStorage(LOCALSTORAGE_KEYS.TOKEN) };
+const requestBody = { token: getFromStorage(LOCALSTORAGE_KEYS.TOKEN) };
 
 type Props = {} & NavigationScreenProps;
 
@@ -80,7 +80,7 @@ export default function JourneyScene(props: Props) {
       method="POST"
       URL={getUserJourneyURL}
       onSuccess={onSuccessFetch}
-      requestBody={token}
+      requestBody={requestBody}
     >
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.stagesContainer}>

@@ -5,4 +5,5 @@ export const COLLECTION_NAME = {
   ACHIEVEMENTS: "achievements",
   PHONE_SKINS: "phoneSkins",
   JOURNEY: "journey",
+  AVATARS: "avatars",
 };

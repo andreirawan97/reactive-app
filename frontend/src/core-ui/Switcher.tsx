@@ -18,51 +18,59 @@ export type Content = {
 type Props = {
   contents: Array<Content>;
   containerStyle?: ViewStyle;
+  onChangeSwitcher?: (newIndex: number) => void;
 };
 
 export default function Switcher(props: Props) {
-  let { contents, containerStyle } = props;
+  let { contents, containerStyle, onChangeSwitcher } = props;
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
+  let onPressSwitcher = (newIndex: number) => {
+    onChangeSwitcher && onChangeSwitcher(newIndex);
+    setSelectedIndex(newIndex);
+  };
+
   return (
-    <View style={containerStyle}>
-      <ScrollView
-        horizontal={true}
-        contentContainerStyle={styles.headersContainer}
-      >
-        {contents.map((content, i) => {
-          return i === selectedIndex ? (
-            <TouchableOpacity
-              key={i}
-              style={styles.headerTextContainer}
-              onPress={() => setSelectedIndex(i)}
-            >
-              <Text style={styles.selectedHeaderText}>
-                {content.headerText}
-              </Text>
-              <View style={styles.selectedHeaderPointer} />
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              key={i}
-              style={styles.headerTextContainer}
-              onPress={() => setSelectedIndex(i)}
-            >
-              <Text style={styles.headerText}>{content.headerText}</Text>
-            </TouchableOpacity>
-          );
-        })}
-      </ScrollView>
-      <View style={styles.componentContainer}>
-        {contents[selectedIndex].component()}
+    <View style={[styles.container, containerStyle]}>
+      <View style={styles.headersContainer}>
+        <ScrollView horizontal={true}>
+          {contents.map((content, i) => {
+            return i === selectedIndex ? (
+              <TouchableOpacity
+                key={i}
+                style={styles.headerTextContainer}
+                onPress={() => onPressSwitcher(i)}
+              >
+                <Text style={styles.selectedHeaderText}>
+                  {content.headerText}
+                </Text>
+                <View style={styles.selectedHeaderPointer} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                key={i}
+                style={styles.headerTextContainer}
+                onPress={() => onPressSwitcher(i)}
+              >
+                <Text style={styles.headerText}>{content.headerText}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+      </View>
+
+      <View style={{ flex: 1, marginTop: 12 }}>
+        <ScrollView>{contents[selectedIndex].component()}</ScrollView>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  componentContainer: {},
+  container: {
+    flex: 1,
+  },
   selectedHeaderText: {
     color: COLORS.PRIMARY,
     fontSize: FONT_SIZE.HEADER2,
@@ -85,6 +93,6 @@ const styles = StyleSheet.create({
   headersContainer: {
     flexDirection: 'row',
     width: '100%',
-    marginBottom: 32,
+    marginBottom: 8,
   },
 });

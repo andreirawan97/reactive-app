@@ -5,13 +5,12 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import { AppState } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 import homebrewFetch from '../helpers/homebrewFetch';
 import { Response } from '../types/firestore';
 
 import Loading from './Loading';
-import { useFocusEffect } from '@react-navigation/native';
 
 type Props = {
   method: 'GET' | 'POST';
@@ -27,7 +26,6 @@ export default function Fetcher(props: Props) {
     method,
     fallback = Loading,
     URL,
-    // todo: add token as default request body
     requestBody = {},
     onSuccess,
     onFailure,
@@ -35,31 +33,20 @@ export default function Fetcher(props: Props) {
 
   let [isFetching, setFetching] = useState(true);
 
-  // let request = useCallback(async () => {
-  //   try {
-  //     let response = await homebrewFetch(method, URL, requestBody);
-  //     let data = await response.json();
-  //     setFetching(false);
-  //     onSuccess(data);
-  //   } catch (err) {
-  //     onFailure && onFailure(err);
-  //   }
-  // }, []);
+  let fetchFn = useCallback(() => {
+    try {
+      homebrewFetch(method, URL, requestBody)
+        .then((response) => response.json())
+        .then((data) => {
+          setFetching(false);
+          onSuccess(data);
+        });
+    } catch (err) {
+      onFailure && onFailure(err);
+    }
+  }, [method, URL, requestBody, onSuccess, onFailure]);
 
-  useFocusEffect(
-    useCallback(() => {
-      try {
-        homebrewFetch(method, URL, requestBody)
-          .then((response) => response.json())
-          .then((data) => {
-            setFetching(false);
-            onSuccess(data);
-          });
-      } catch (err) {
-        onFailure && onFailure(err);
-      }
-    }, [method, URL, requestBody, onSuccess, onFailure]),
-  );
+  useFocusEffect(fetchFn);
 
   if (isFetching) {
     return fallback ? fallback() : <Loading />;

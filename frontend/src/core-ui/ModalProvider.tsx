@@ -4,6 +4,7 @@ import React, {
   useEffect,
   Fragment,
   ReactNode,
+  useCallback,
 } from 'react';
 import {
   View,
@@ -69,23 +70,7 @@ export default function ModalProvider(props: Props) {
     title,
   } = config;
 
-  useEffect(() => {
-    modalEmitter.addListener('showModal', (modalConfig: ModalConfig) => {
-      if (!isShowing) {
-        setShowing(true);
-        setConfig({
-          ...config,
-          ...modalConfig,
-        });
-      }
-    });
-
-    return () => {
-      modalEmitter.removeAllListeners();
-    };
-  }, [isShowing, config]);
-
-  let closeModal = () => {
+  let closeModal = useCallback(() => {
     Animated.parallel([
       Animated.spring(animatedSpringValue, {
         useNativeDriver: true,
@@ -102,8 +87,8 @@ export default function ModalProvider(props: Props) {
     setTimeout(() => {
       setShowing(false);
       onCloseModal && onCloseModal();
-    }, 200);
-  };
+    }, 300);
+  }, [animatedFadeValue, animatedSpringValue, onCloseModal]);
 
   let renderModal = () => {
     Animated.parallel([
@@ -153,13 +138,12 @@ export default function ModalProvider(props: Props) {
 
   useEffect(() => {
     modalEmitter.addListener('showModal', (modalConfig: ModalConfig) => {
-      if (!isShowing) {
-        setShowing(true);
-        setConfig({
-          ...config,
-          ...modalConfig,
-        });
-      }
+      setShowing(false);
+      setShowing(true);
+      setConfig({
+        ...initialConfig,
+        ...modalConfig,
+      });
     });
 
     modalEmitter.addListener('closeModal', () => {
@@ -171,7 +155,7 @@ export default function ModalProvider(props: Props) {
     return () => {
       modalEmitter.removeAllListeners();
     };
-  }, [isShowing, config, closeModal]);
+  }, [isShowing, config, closeModal, initialConfig]);
 
   return (
     <Fragment>

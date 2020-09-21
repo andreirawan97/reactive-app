@@ -18,6 +18,7 @@ export type PhoneSkin = {
     width: number;
     height: number;
   };
+  price: number;
 };
 
 const phoneSkins: Record<string, PhoneSkin> = {

@@ -195,6 +195,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 4,
+    backgroundColor: '#fafafa',
   },
   userInfoContainer: {
     marginTop: 40,

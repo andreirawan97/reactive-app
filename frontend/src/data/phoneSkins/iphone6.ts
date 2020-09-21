@@ -16,6 +16,7 @@ const iphone6 = {
     width: 176,
     height: 312,
   },
+  price: 0,
 };
 
 export default iphone6;

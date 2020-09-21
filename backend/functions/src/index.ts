@@ -7,6 +7,7 @@ import {
   emptyJourneyData,
   emptyAchievementData,
   emptyPhoneSkinsData,
+  emptyAvatarData,
 } from "./constants/emptyData";
 
 admin.initializeApp();
@@ -53,7 +54,7 @@ export const signup = functions.https.onRequest(async (req, res) => {
   const emptyUserData = {
     email: "",
     name: "",
-    currency: 0,
+    currency: 999999,
     currentExp: 0,
     avatar: "noAvatar",
     border: "",
@@ -112,6 +113,11 @@ export const signup = functions.https.onRequest(async (req, res) => {
       .collection(COLLECTION_NAME.JOURNEY)
       .doc(email)
       .set(emptyJourneyData);
+
+    await firestore
+      .collection(COLLECTION_NAME.AVATARS)
+      .doc(email)
+      .set(emptyAvatarData);
 
     res.set({ "Access-Control-Allow-Origin": "*" });
     res.send({
@@ -218,6 +224,34 @@ export const getUserJourney = functions.https.onRequest(async (req, res) => {
   }
 });
 
+export const getUserAvatars = functions.https.onRequest(async (req, res) => {
+  let { token } = JSON.parse(req.body);
+  let email = jwt.verify(token, SECRET_KEY) as string;
+
+  const avatarsSnapshot = await firestore
+    .collection(COLLECTION_NAME.AVATARS)
+    .doc(email)
+    .get();
+
+  const avatarsData = avatarsSnapshot.data();
+
+  if (avatarsData) {
+    res.set({ "Access-Control-Allow-Origin": "*" });
+    res.send({
+      success: true,
+      message: "OK.",
+      token: jwt.sign(avatarsData, SECRET_KEY),
+    });
+  } else {
+    res.set({ "Access-Control-Allow-Origin": "*" });
+    res.send({
+      success: false,
+      message: "Error occured when loading Achievements",
+      token: "",
+    });
+  }
+});
+
 export const updateJourneyProgress = functions.https.onRequest(
   async (req, res) => {
     let { token } = JSON.parse(req.body);
@@ -298,3 +332,87 @@ export const updateJourneyProgress = functions.https.onRequest(
     }
   }
 );
+
+export const shopTransaction = functions.https.onRequest(async (req, res) => {
+  let { token } = JSON.parse(req.body);
+  let { type, id, price, email } = jwt.verify(token, SECRET_KEY) as {
+    email: string;
+    type: string;
+    id: string;
+    price: number;
+  };
+
+  const userSnapshot = await firestore
+    .collection(COLLECTION_NAME.USERS)
+    .doc(email)
+    .get();
+
+  const userData = userSnapshot.data();
+
+  if (userData) {
+    if (userData.currency >= price) {
+      switch (type) {
+        case "avatar": {
+          const avatarSnapshot = await firestore
+            .collection(COLLECTION_NAME.AVATARS)
+            .doc(email)
+            .get();
+          const avatarData = avatarSnapshot.data();
+
+          if (avatarData && !avatarData[id]) {
+            userData.currency -= price;
+            avatarData[id] = true;
+
+            await firestore
+              .collection(COLLECTION_NAME.AVATARS)
+              .doc(email)
+              .set(avatarData);
+
+            await firestore
+              .collection(COLLECTION_NAME.USERS)
+              .doc(email)
+              .set(userData);
+
+            res.set({ "Access-Control-Allow-Origin": "*" });
+            res.send({
+              success: true,
+              message: "Item successfully purchased!",
+              token: "",
+            });
+          } else {
+            res.set({ "Access-Control-Allow-Origin": "*" });
+            res.send({
+              success: false,
+              message: "You already have this item!",
+              token: "",
+            });
+          }
+          break;
+        }
+        default: {
+          res.set({ "Access-Control-Allow-Origin": "*" });
+          res.send({
+            success: false,
+            message: "Error occured. ",
+            token: "Error occured. Invalid item type",
+          });
+          break;
+        }
+      }
+    } else {
+      res.set({ "Access-Control-Allow-Origin": "*" });
+      res.send({
+        success: false,
+        message: "You have not enough Coffe Beans!",
+        token: "",
+      });
+    }
+  } else {
+    res.set({ "Access-Control-Allow-Origin": "*" });
+    res.send({
+      success: false,
+      message: "Error occured. Cannot process transaction",
+      token: "",
+    });
+  }
+});

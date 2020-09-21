@@ -1,13 +1,12 @@
 import React from 'react';
 import {
-  Button as RawButton,
-  ButtonProps,
   TouchableOpacity,
   StyleSheet,
   ViewStyle,
   Text,
   TextStyle,
 } from 'react-native';
+
 import { COLORS } from '../constants/styles';
 
 type Props = {

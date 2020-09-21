@@ -12,5 +12,7 @@ export const ENDPOINT = {
   GET_USER_DATA: 'getUserData',
   GET_USER_ACHIEVEMENTS: 'getUserAchievements',
   GET_USER_JOURNEY: 'getUserJourney',
+  GET_USER_AVATARS: 'getUserAvatars',
   UPDATE_JOURNEY_PROGRESS: 'updateJourneyProgress',
+  SHOP_TRANSACTION: 'shopTransaction',
 };

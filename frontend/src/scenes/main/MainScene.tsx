@@ -24,6 +24,13 @@ const REQUEST_BODY = { token: getFromStorage(LOCALSTORAGE_KEYS.TOKEN) };
 export default function MainScene(props: Props) {
   let [userData, setUserData] = useState(emptyUserData);
 
+  let reduceCurrency = (reduceBy: number) => {
+    setUserData({
+      ...userData,
+      currency: userData.currency - reduceBy,
+    });
+  };
+
   const DRAWER_CONTENTS: Array<Content> = [
     {
       title: 'Home',
@@ -49,7 +56,7 @@ export default function MainScene(props: Props) {
     },
     {
       title: 'Shop',
-      component: () => ShopScene(props),
+      component: () => ShopScene({ ...props, reduceCurrency }),
       icon: () => (
         <MaterialCommunityIcons
           name="shopping"

@@ -26,3 +26,11 @@ export const emptyAchievementData = {
     aPerspective: false,
   },
 };
+
+export const emptyAvatarData = {
+  fallenCoder: false,
+  stickman: false,
+  millionaire: false,
+  semicolon: false,
+  theAtom: false,
+};
