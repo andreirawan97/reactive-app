@@ -1,6 +1,9 @@
 import { ImageSourcePropType } from 'react-native';
 
 import iphone6 from './iphone6';
+import nexus5 from './nexus5';
+
+export type PhoneSkinId = 'iphone6' | 'nexus5';
 
 export type PhoneSkin = {
   id: string;
@@ -21,8 +24,9 @@ export type PhoneSkin = {
   price: number;
 };
 
-const phoneSkins: Record<string, PhoneSkin> = {
+const phoneSkins: Record<PhoneSkinId, PhoneSkin> = {
   iphone6,
+  nexus5,
 };
 
 export default phoneSkins;

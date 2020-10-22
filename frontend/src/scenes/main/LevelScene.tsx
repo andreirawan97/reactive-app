@@ -19,17 +19,19 @@ import { decodeToken, encodeToken } from '../../helpers/token';
 import { getFromStorage } from '../../helpers/storage';
 import { LOCALSTORAGE_KEYS } from '../../constants/keys';
 import { Response } from '../../types/firestore';
+import { PhoneSkinId } from '../../data/phoneSkins';
 
 type Props = {} & NavigationScreenProps;
 
 const UPDATE_JOURNEY_PROGRESS_URL = `${FIREBASE_URL}${ENDPOINT.UPDATE_JOURNEY_PROGRESS}`;
 
 export default function LevelScene(props: Props) {
-  let { currentLevelData, currentLevelUserData, stageId } = props.route
-    .params as {
+  let { currentLevelData, currentLevelUserData, stageId, userPhoneSkin } = props
+    .route.params as {
     currentLevelData: Level;
     currentLevelUserData: UserJourney;
     stageId: StageId;
+    userPhoneSkin: PhoneSkinId;
   };
 
   let {
@@ -38,7 +40,7 @@ export default function LevelScene(props: Props) {
     levelNo,
     stageName,
     expectedOutput,
-    correctAnswer,
+    correctAnswers,
     difficulty,
     timeLimit,
     chanceRewards,
@@ -49,37 +51,18 @@ export default function LevelScene(props: Props) {
   const [answer, setAnswer] = useState('');
   const [currentTime, setCurrentTime] = useState(timeLimit);
   const [stopTimer, setStopTimer] = useState(false);
-  const [score, setScore] = useState(0);
-  const [rewards, setRewards] = useState<Array<Reward>>();
 
   let onHomeButtonPress = useCallback(() => {
     closeModal();
     props.navigation.goBack();
   }, [props.navigation]);
 
-  let onTryAgainPress = () => {
+  let onTryAgainPress = useCallback(() => {
     closeModal();
     setCurrentTime(timeLimit);
     setStopTimer(false);
     setAnswer('');
-  };
-
-  let updateJourneyProgress = useCallback(() => {
-    let requestBodyObject = {
-      email: decodeToken(getFromStorage(LOCALSTORAGE_KEYS.TOKEN) || ''),
-      id: stageId,
-      levelNo,
-      score,
-      rewards,
-    };
-    let requestBody = { token: encodeToken(requestBodyObject) };
-
-    homebrewFetch('POST', UPDATE_JOURNEY_PROGRESS_URL, requestBody)
-      .then((response) => response.json())
-      .then((data: Response) => {
-        console.log(data);
-      });
-  }, [levelNo, score, stageId, rewards]);
+  }, [timeLimit]);
 
   let TimeIcon = () =>
     React.createElement(SVG.timeSVG, { width: 40, height: 40 });
@@ -155,8 +138,7 @@ export default function LevelScene(props: Props) {
   };
 
   let FinishedModalContent = useCallback(() => {
-    const scoreTmp = calculateScore(currentTime, timeLimit, difficulty);
-    setScore(scoreTmp);
+    const finalScore = calculateScore(currentTime, timeLimit, difficulty);
 
     const finalRewards: Array<Reward> = isFirstTime
       ? [...firstTimeRewards]
@@ -167,7 +149,20 @@ export default function LevelScene(props: Props) {
       }
     });
 
-    setRewards(finalRewards);
+    let requestBodyObject = {
+      email: decodeToken(getFromStorage(LOCALSTORAGE_KEYS.TOKEN) || ''),
+      id: stageId,
+      levelNo,
+      score: finalScore,
+      rewards: finalRewards,
+    };
+    let requestBody = { token: encodeToken(requestBodyObject) };
+
+    homebrewFetch('POST', UPDATE_JOURNEY_PROGRESS_URL, requestBody)
+      .then((response) => response.json())
+      .then((data: Response) => {
+        console.log(data);
+      });
 
     return (
       <View style={styles.modalContentContainer}>
@@ -176,7 +171,7 @@ export default function LevelScene(props: Props) {
         <Text style={styles.modalCompletionTimeText}>
           Completion time: {msToCompletionTime(currentTime)}
         </Text>
-        <Text style={styles.modalScoreText}>Score: {scoreTmp}</Text>
+        <Text style={styles.modalScoreText}>Score: {finalScore}</Text>
 
         <RewardList rewards={finalRewards} />
 
@@ -206,6 +201,8 @@ export default function LevelScene(props: Props) {
     firstTimeRewards,
     isFirstTime,
     onHomeButtonPress,
+    levelNo,
+    stageId,
   ]);
 
   let FailedModalContent = useCallback(() => {
@@ -250,7 +247,7 @@ export default function LevelScene(props: Props) {
         />
       </View>
     );
-  }, []);
+  }, [onHomeButtonPress, onTryAgainPress]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -274,21 +271,14 @@ export default function LevelScene(props: Props) {
   }, [currentTime, stopTimer, FailedModalContent]);
 
   useEffect(() => {
-    if (answer === correctAnswer) {
+    if (correctAnswers.includes(answer)) {
       setStopTimer(true);
       showModal({
         content: FinishedModalContent,
         showCloseButton: false,
       });
-      updateJourneyProgress();
     }
-  }, [
-    answer,
-    correctAnswer,
-    setStopTimer,
-    FinishedModalContent,
-    updateJourneyProgress,
-  ]);
+  }, [answer, correctAnswers, setStopTimer, FinishedModalContent]);
 
   let onChangeAnswerField = (value: string) => {
     setAnswer(value);
@@ -333,7 +323,7 @@ export default function LevelScene(props: Props) {
       </View>
       <View style={styles.rightContainer}>
         <Text style={styles.expectedResultText}>Expected Output</Text>
-        <Phone phoneSkinId="iphone6" expectedOutput={expectedOutput} />
+        <Phone phoneSkinId={userPhoneSkin} expectedOutput={expectedOutput} />
       </View>
     </View>
   );

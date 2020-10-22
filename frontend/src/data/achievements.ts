@@ -1,4 +1,4 @@
-export type AchievementId = 'helloWorld' | 'aPerspective';
+export type AchievementId = 'helloWorld' | 'perspective';
 type Achievement = {
   id: AchievementId;
   name: string;
@@ -12,8 +12,8 @@ export const achievements: Array<Achievement> = [
     caption: `Complete the "Hello World!" stage`,
   },
   {
-    id: 'aPerspective',
+    id: 'perspective',
     name: 'A New Perspective',
-    caption: `Complete the "A Perspective" stage`,
+    caption: `Complete the "Perspective" stage`,
   },
 ];

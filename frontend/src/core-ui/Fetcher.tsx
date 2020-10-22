@@ -22,31 +22,24 @@ type Props = {
   children: ReactNode;
 };
 export default function Fetcher(props: Props) {
-  let {
-    method,
-    fallback = Loading,
-    URL,
-    requestBody = {},
-    onSuccess,
-    onFailure,
-  } = props;
+  let { method, fallback, URL, requestBody = {}, onSuccess, onFailure } = props;
 
   let [isFetching, setFetching] = useState(true);
 
-  let fetchFn = useCallback(() => {
-    try {
-      homebrewFetch(method, URL, requestBody)
-        .then((response) => response.json())
-        .then((data) => {
-          setFetching(false);
-          onSuccess(data);
-        });
-    } catch (err) {
-      onFailure && onFailure(err);
-    }
-  }, [method, URL, requestBody, onSuccess, onFailure]);
-
-  useFocusEffect(fetchFn);
+  useFocusEffect(
+    useCallback(() => {
+      try {
+        homebrewFetch(method, URL, requestBody)
+          .then((response) => response.json())
+          .then((data) => {
+            setFetching(false);
+            onSuccess(data);
+          });
+      } catch (err) {
+        onFailure && onFailure(err);
+      }
+    }, [method, URL, requestBody, onSuccess, onFailure]),
+  );
 
   if (isFetching) {
     return fallback ? fallback() : <Loading />;

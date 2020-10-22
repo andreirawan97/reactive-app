@@ -9,7 +9,7 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import SVG from '../../../../assets/svg';
-import { HomeCard } from '../../../components';
+import { Card } from '../../../components';
 import { Button, Fetcher } from '../../../core-ui';
 import { getAchievement } from '../../../helpers/achievement';
 import { COLORS } from '../../../constants/styles';
@@ -22,6 +22,7 @@ import { decodeToken } from '../../../helpers/token';
 import { Response } from '../../../types/firestore';
 import { UserAchievements } from '../../../fixtures/achievements';
 import { showModal } from '../../../core-ui/ModalProvider';
+import { achievements } from '../../../data/achievements';
 
 const tokenReqBody = { token: getFromStorage(LOCALSTORAGE_KEYS.TOKEN) };
 
@@ -34,7 +35,7 @@ export default function HomeScene(props: Props) {
     latestAchievementId: '',
     data: {
       helloWorld: false, // Boolean for is the achievement unlocked. The default is false
-      aPerspective: false,
+      perspective: false,
     },
   });
 
@@ -44,22 +45,63 @@ export default function HomeScene(props: Props) {
     setUserAchievements(data);
   }, []);
 
-  let viewAllAchievements = () => {
-    showModal({
-      content: () => <></>,
-      title: 'Achievements',
-      containerStyle: {
-        width: '60%',
-      },
-    });
-  };
-
   let HomeStart = () =>
     React.createElement(SVG.homeStartSVG, { width: 450, height: 450 });
   let AchievementIcon = () =>
     React.createElement(SVG.achievementSVG, { width: 30, height: 30 });
   let FriendListIcon = () =>
     React.createElement(SVG.friendListSVG, { width: 30, height: 30 });
+  let LockIcon = () =>
+    React.createElement(SVG.lockSVG, {
+      width: 50,
+      height: 50,
+      fill: '#898989',
+    });
+  let GreenCheckmarkIcon = () =>
+    React.createElement(SVG.greenCheckmarkSVG, { width: 50, height: 50 });
+
+  let AchievementModalContent = () => {
+    return (
+      <ScrollView contentContainerStyle={{ flex: 1 }}>
+        {achievements.map((achievement, i) => (
+          <View
+            key={i}
+            style={{
+              flexDirection: 'row',
+              width: '100%',
+              alignItems: 'center',
+              paddingTop: 24,
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 12 }}
+              >
+                {achievement.name}
+              </Text>
+              <Text style={{ fontSize: 14 }}>{achievement.caption}</Text>
+            </View>
+
+            {userAchievements.data[achievement.id] ? (
+              <GreenCheckmarkIcon />
+            ) : (
+              <LockIcon />
+            )}
+          </View>
+        ))}
+      </ScrollView>
+    );
+  };
+
+  let viewAllAchievements = () => {
+    showModal({
+      content: AchievementModalContent,
+      title: 'Achievements',
+      containerStyle: {
+        width: '60%',
+      },
+    });
+  };
 
   let NoAchievement = () => (
     <View
@@ -218,14 +260,14 @@ export default function HomeScene(props: Props) {
       </View>
       <View style={styles.rightContainer}>
         <View style={{ flex: 1, marginBottom: 20 }}>
-          <HomeCard
+          <Card
             title="Achievements"
             titleIcon={AchievementIcon}
             content={LatestAchievement}
           />
         </View>
         <View style={{ flex: 2 }}>
-          <HomeCard
+          <Card
             title="Friend List"
             titleIcon={FriendListIcon}
             content={FriendList}

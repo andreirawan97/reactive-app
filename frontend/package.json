@@ -15,6 +15,7 @@
 	},
 	"dependencies": {
 		"@babel/preset-react": "^7.10.4",
+		"@expo/style-utils": "^1.0.2",
 		"@react-navigation/native": "^5.7.3",
 		"@react-navigation/stack": "^5.9.0",
 		"@types/fbemitter": "^2.0.32",

@@ -13,6 +13,9 @@ export const ENDPOINT = {
   GET_USER_ACHIEVEMENTS: 'getUserAchievements',
   GET_USER_JOURNEY: 'getUserJourney',
   GET_USER_AVATARS: 'getUserAvatars',
+  GET_USER_PHONE_SKINS: 'getUserPhoneSkins',
   UPDATE_JOURNEY_PROGRESS: 'updateJourneyProgress',
   SHOP_TRANSACTION: 'shopTransaction',
+  UPDATE_USER_PROFILE: 'updateUserProfile',
+  GET_CUSTOMIZATION_ITEM: 'getCustomizationItem',
 };

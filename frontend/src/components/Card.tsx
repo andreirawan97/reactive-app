@@ -1,19 +1,20 @@
 import React, { ReactElement } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, ViewStyle } from 'react-native';
 
 type Props = {
-  title: string;
+  title?: string;
   content: () => ReactElement;
-  titleIcon: () => ReactElement;
+  titleIcon?: () => ReactElement;
+  containerStyle?: ViewStyle;
 };
 
-export default function HomeCard(props: Props) {
-  let { title, content, titleIcon } = props;
+export default function Card(props: Props) {
+  let { title, content, titleIcon, containerStyle } = props;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <View style={styles.headerContainer}>
-        <View style={styles.imageContainer}>{titleIcon()}</View>
+        {titleIcon && <View style={styles.imageContainer}>{titleIcon()}</View>}
         <Text style={styles.titleText}>{title}</Text>
       </View>
       <View style={styles.contentContainer}>{content()}</View>

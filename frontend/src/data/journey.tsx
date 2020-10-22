@@ -3,9 +3,10 @@ import React, { ReactElement } from 'react';
 import SVG from '../../assets/svg';
 
 import { helloWorldLevels } from './levels/helloWorld';
+import { perspectiveLevels } from './levels/perspective';
 import { Reward } from './rewards';
 
-export type StageId = 'helloWorld';
+export type StageId = 'helloWorld' | 'perspective';
 
 export type Code = {
   tabCount: number;
@@ -20,7 +21,7 @@ export type Level = {
   levelNo: number;
   content: Array<string>;
   codeContent: Array<Code>;
-  correctAnswer: string;
+  correctAnswers: Array<string>;
   expectedOutput: () => ReactElement;
   timeLimit: number; // in milisecond
   difficulty: number; // scale 1-5. Final score (timeLimitMax - currentTimeLimit) / 1000 * difficulty
@@ -53,6 +54,14 @@ export const journey: Journey = [
         description:
           'This is the most basic. Learn how to write bug-free Hello World text!',
         levels: helloWorldLevels,
+      },
+      {
+        id: 'perspective',
+        icon: () =>
+          React.createElement(SVG.perspectiveSVG, { width: 50, height: 50 }),
+        name: 'Perspective',
+        description: 'Learn how to build a layout with View component.',
+        levels: perspectiveLevels,
       },
     ],
   },

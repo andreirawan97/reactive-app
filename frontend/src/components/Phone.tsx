@@ -1,15 +1,16 @@
 import React, { ReactElement } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 
-import phoneSkins, { PhoneSkin } from '../data/phoneSkins';
+import phoneSkins, { PhoneSkinId } from '../data/phoneSkins';
 
 type Props = {
-  phoneSkinId: string;
+  phoneSkinId: PhoneSkinId;
   expectedOutput: () => ReactElement;
+  scale?: number;
 };
 
 export default function Phone(props: Props) {
-  let { phoneSkinId, expectedOutput } = props;
+  let { phoneSkinId, expectedOutput, scale = 1 } = props;
 
   let selectedPhoneSkin = phoneSkins[phoneSkinId];
 
@@ -18,8 +19,8 @@ export default function Phone(props: Props) {
       <Image
         source={selectedPhoneSkin.source}
         style={{
-          width: selectedPhoneSkin.dimension.width,
-          height: selectedPhoneSkin.dimension.height,
+          width: selectedPhoneSkin.dimension.width * scale,
+          height: selectedPhoneSkin.dimension.height * scale,
           resizeMode: 'contain',
         }}
       />
@@ -27,10 +28,10 @@ export default function Phone(props: Props) {
         style={[
           styles.rendererView,
           {
-            top: selectedPhoneSkin.renderArea.offset.top,
-            left: selectedPhoneSkin.renderArea.offset.left,
-            width: selectedPhoneSkin.renderArea.width,
-            height: selectedPhoneSkin.renderArea.height,
+            top: selectedPhoneSkin.renderArea.offset.top * scale,
+            left: selectedPhoneSkin.renderArea.offset.left * scale,
+            width: selectedPhoneSkin.renderArea.width * scale,
+            height: selectedPhoneSkin.renderArea.height * scale,
           },
         ]}
       >
@@ -45,5 +46,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1,
     padding: 5,
+    backgroundColor: 'white',
   },
 });

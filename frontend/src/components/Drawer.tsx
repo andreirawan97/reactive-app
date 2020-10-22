@@ -24,12 +24,13 @@ export type Content = {
 type Props = {
   userData: UserData;
   contents: Array<Content>;
+  onAvatarPress: () => void;
   defaultIndex?: number;
 };
 
 export default function Drawer(props: Props) {
-  let { contents, userData, defaultIndex } = props;
-  let { border, currency, currentExp, name, avatar } = userData;
+  let { contents, userData, defaultIndex, onAvatarPress } = props;
+  let { currency, currentExp, name, avatar } = userData;
 
   const [selectedIndex, setSelectedIndex] = useState(
     defaultIndex ? defaultIndex : 0,
@@ -43,11 +44,15 @@ export default function Drawer(props: Props) {
   };
 
   let ProgressBar = () => {
-    let milestoneExp = Math.floor(currentExp / 1000) * 1000 + 1000;
-    console.log(milestoneExp);
+    /**
+     * Example:
+     * Current Exp: 1500
+     * Reduced Exp: Current Exp - Floor(1500/1000)*1000 = 1500-1*1000 = 500
+     * Current Percentage: 500/1000 = 0.5 * 100 = 50%
+     */
+    let reducedExp = currentExp - Math.floor(currentExp / 1000) * 1000;
+    let currentPercentage = (reducedExp / 1000) * 100;
 
-    let currentPercentage = (milestoneExp - currentExp) * 0.01;
-    console.log(currentPercentage);
     return (
       <View
         style={{
@@ -103,16 +108,8 @@ export default function Drawer(props: Props) {
             rounded
             source={getAvatarSource(avatar)}
             size="large"
-            containerStyle={[
-              styles.avatarContainer,
-              border !== ''
-                ? {
-                    padding: 5,
-                    borderWidth: 1,
-                    borderColor: COLORS.PASTEL_SALMON,
-                  }
-                : null,
-            ]}
+            containerStyle={styles.avatarContainer}
+            onPress={onAvatarPress}
           />
           <Text style={styles.name} numberOfLines={1}>
             {name}

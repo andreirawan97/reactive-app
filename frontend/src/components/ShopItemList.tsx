@@ -5,7 +5,7 @@ import { CurrencyIcon } from '../../assets';
 import { LOCALSTORAGE_KEYS } from '../constants/keys';
 import { ENDPOINT, FIREBASE_URL } from '../constants/network';
 import { COLORS } from '../constants/styles';
-import { Button, Fetcher, Loading } from '../core-ui';
+import { Button, Loading } from '../core-ui';
 import { Avatar } from '../data/avatars';
 import { PhoneSkin } from '../data/phoneSkins';
 import homebrewFetch from '../helpers/homebrewFetch';
@@ -20,16 +20,18 @@ type Props = {
 };
 
 const getUserAvatarsURL = `${FIREBASE_URL}${ENDPOINT.GET_USER_AVATARS}`;
+const getUserPhoneSkinsURL = `${FIREBASE_URL}${ENDPOINT.GET_USER_PHONE_SKINS}`;
 const requestBody = { token: getFromStorage(LOCALSTORAGE_KEYS.TOKEN) };
 
 export default function ShopItemList(props: Props) {
   let { itemType, items, onPurchasePress } = props;
 
   const [isLoading, setLoading] = useState(true);
-  const [userAvatarsData, setUserAvatarsData] = useState<any>();
+  const [userItemData, setUserItemData] = useState<Record<string, boolean>>({
+    test: false,
+  });
 
-  let onSuccessFetchData = () => {};
-
+  // Load if the item is owned or not
   useEffect(() => {
     setLoading(true);
 
@@ -37,6 +39,10 @@ export default function ShopItemList(props: Props) {
     switch (itemType) {
       case 'avatar': {
         requestURL = getUserAvatarsURL;
+        break;
+      }
+      case 'phoneSkin': {
+        requestURL = getUserPhoneSkinsURL;
         break;
       }
       default: {
@@ -48,48 +54,56 @@ export default function ShopItemList(props: Props) {
       .then((response) => response.json())
       .then((data: Response) => {
         let { token } = data;
-        let userItemData = decodeToken(token);
+        let userItemDataTmp = decodeToken(token) as Record<string, boolean>;
 
-        if (itemType === 'avatar') {
-          setUserAvatarsData(userItemData);
-        }
+        setUserItemData(userItemDataTmp);
 
         setLoading(false);
       });
   }, [itemType]);
 
   return (
-    <View style={styles.container}>
+    <View style={{ flex: 1 }}>
       {isLoading ? (
         <Loading />
       ) : (
-        items.map((item, i) => (
-          <View key={i} style={styles.shopItemCardContainer}>
-            <Image source={item.source} style={styles.shopItemImage} />
-            <Text numberOfLines={1} style={styles.shopItemName}>
-              {item.name}
-            </Text>
-
-            <View style={styles.currencyContainer}>
-              <Image source={CurrencyIcon} style={styles.currencyImage} />
-              <Text numberOfLines={1} style={styles.currencyText}>
-                {item.price}
+        <View style={styles.container}>
+          {items.map((item, i) => (
+            <View key={i} style={styles.shopItemCardContainer}>
+              <Image
+                source={item.source}
+                style={[
+                  styles.shopItemImage,
+                  {
+                    resizeMode: itemType === 'phoneSkin' ? 'contain' : 'cover',
+                  },
+                ]}
+              />
+              <Text numberOfLines={1} style={styles.shopItemName}>
+                {item.name}
               </Text>
-            </View>
 
-            <Button
-              title={userAvatarsData[item.id] ? 'Owned' : 'Purchase'}
-              onPress={() => {
-                !userAvatarsData[item.id] && onPurchasePress(item);
-              }}
-              backgroundColor={
-                userAvatarsData[item.id] ? COLORS.GRAY : COLORS.PRIMARY
-              }
-              containerStyle={styles.purchaseButtonContainer}
-              titleStyle={styles.purchaseButtonText}
-            />
-          </View>
-        ))
+              <View style={styles.currencyContainer}>
+                <Image source={CurrencyIcon} style={styles.currencyImage} />
+                <Text numberOfLines={1} style={styles.currencyText}>
+                  {item.price}
+                </Text>
+              </View>
+
+              <Button
+                title={userItemData[item.id] ? 'Owned' : 'Purchase'}
+                onPress={() => {
+                  !userItemData[item.id] && onPurchasePress(item);
+                }}
+                backgroundColor={
+                  userItemData[item.id] ? COLORS.GRAY : COLORS.PRIMARY
+                }
+                containerStyle={styles.purchaseButtonContainer}
+                titleStyle={styles.purchaseButtonText}
+              />
+            </View>
+          ))}
+        </View>
       )}
     </View>
   );
@@ -120,7 +134,6 @@ const styles = StyleSheet.create({
   shopItemImage: {
     width: 120,
     height: 120,
-    resizeMode: 'cover',
     marginBottom: 20,
   },
   shopItemName: {

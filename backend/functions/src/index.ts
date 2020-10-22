@@ -57,7 +57,7 @@ export const signup = functions.https.onRequest(async (req, res) => {
     currency: 999999,
     currentExp: 0,
     avatar: "noAvatar",
-    border: "",
+    phoneSkin: "iphone6",
   };
   const emptyFriendList = {
     friendList: [],
@@ -252,6 +252,34 @@ export const getUserAvatars = functions.https.onRequest(async (req, res) => {
   }
 });
 
+export const getUserPhoneSkins = functions.https.onRequest(async (req, res) => {
+  let { token } = JSON.parse(req.body);
+  let email = jwt.verify(token, SECRET_KEY) as string;
+
+  const phoneSkinsSnapshot = await firestore
+    .collection(COLLECTION_NAME.PHONE_SKINS)
+    .doc(email)
+    .get();
+
+  const phoneSkinsData = phoneSkinsSnapshot.data();
+
+  if (phoneSkinsData) {
+    res.set({ "Access-Control-Allow-Origin": "*" });
+    res.send({
+      success: true,
+      message: "OK.",
+      token: jwt.sign(phoneSkinsData, SECRET_KEY),
+    });
+  } else {
+    res.set({ "Access-Control-Allow-Origin": "*" });
+    res.send({
+      success: false,
+      message: "Error occured when loading Achievements",
+      token: "",
+    });
+  }
+});
+
 export const updateJourneyProgress = functions.https.onRequest(
   async (req, res) => {
     let { token } = JSON.parse(req.body);
@@ -275,11 +303,16 @@ export const updateJourneyProgress = functions.https.onRequest(
       .collection(COLLECTION_NAME.USERS)
       .doc(email)
       .get();
+    const achievementSnapshot = await firestore
+      .collection(COLLECTION_NAME.ACHIEVEMENTS)
+      .doc(email)
+      .get();
 
     const journeyData = journeySnapshot.data();
     const userData = userSnapshot.data();
+    const achievementData = achievementSnapshot.data();
 
-    if (journeyData && userData) {
+    if (journeyData && userData && achievementData) {
       journeyData[id][levelNo - 1].highScore =
         score > journeyData[id][levelNo - 1].highScore
           ? score
@@ -288,6 +321,12 @@ export const updateJourneyProgress = functions.https.onRequest(
 
       if (journeyData[id][levelNo]) {
         journeyData[id][levelNo].unlocked = true;
+      }
+
+      // If there is no next level, update the achievement
+      if (!journeyData[id][levelNo]) {
+        achievementData.data[id] = true;
+        achievementData.latestAchievementId = id;
       }
 
       rewards.forEach((reward) => {
@@ -315,6 +354,11 @@ export const updateJourneyProgress = functions.https.onRequest(
         .collection(COLLECTION_NAME.USERS)
         .doc(email)
         .set(userData);
+
+      await firestore
+        .collection(COLLECTION_NAME.ACHIEVEMENTS)
+        .doc(email)
+        .set(achievementData);
 
       res.set({ "Access-Control-Allow-Origin": "*" });
       res.send({
@@ -389,6 +433,43 @@ export const shopTransaction = functions.https.onRequest(async (req, res) => {
           }
           break;
         }
+        case "phoneSkin": {
+          const phoneSkinSnapshot = await firestore
+            .collection(COLLECTION_NAME.PHONE_SKINS)
+            .doc(email)
+            .get();
+          const phoneSkinData = phoneSkinSnapshot.data();
+
+          if (phoneSkinData && !phoneSkinData[id]) {
+            userData.currency -= price;
+            phoneSkinData[id] = true;
+
+            await firestore
+              .collection(COLLECTION_NAME.PHONE_SKINS)
+              .doc(email)
+              .set(phoneSkinData);
+
+            await firestore
+              .collection(COLLECTION_NAME.USERS)
+              .doc(email)
+              .set(userData);
+
+            res.set({ "Access-Control-Allow-Origin": "*" });
+            res.send({
+              success: true,
+              message: "Item successfully purchased!",
+              token: "",
+            });
+          } else {
+            res.set({ "Access-Control-Allow-Origin": "*" });
+            res.send({
+              success: false,
+              message: "You already have this item!",
+              token: "",
+            });
+          }
+          break;
+        }
         default: {
           res.set({ "Access-Control-Allow-Origin": "*" });
           res.send({
@@ -416,3 +497,93 @@ export const shopTransaction = functions.https.onRequest(async (req, res) => {
     });
   }
 });
+
+export const updateUserProfile = functions.https.onRequest(async (req, res) => {
+  let { token } = JSON.parse(req.body);
+  let { email, phoneSkin, avatar } = jwt.verify(token, SECRET_KEY) as {
+    email: string;
+    phoneSkin: string;
+    avatar: string;
+  };
+
+  const userSnapshot = await firestore
+    .collection(COLLECTION_NAME.USERS)
+    .doc(email)
+    .get();
+  const userData = userSnapshot.data();
+
+  if (userData) {
+    userData.phoneSkin = phoneSkin;
+    userData.avatar = avatar;
+
+    await firestore.collection(COLLECTION_NAME.USERS).doc(email).set(userData);
+
+    res.set({ "Access-Control-Allow-Origin": "*" });
+    res.send({
+      success: true,
+      message: "Profile saved!",
+      token: "",
+    });
+  } else {
+    res.set({ "Access-Control-Allow-Origin": "*" });
+    res.send({
+      success: false,
+      message: "Error occured. User not found!",
+      token: "",
+    });
+  }
+});
+
+export const getCustomizationItem = functions.https.onRequest(
+  async (req, res) => {
+    let { token } = JSON.parse(req.body);
+    let email = jwt.verify(token, SECRET_KEY) as string;
+
+    const avatarsSnapshot = await firestore
+      .collection(COLLECTION_NAME.AVATARS)
+      .doc(email)
+      .get();
+    const phoneSkinsSnapshot = await firestore
+      .collection(COLLECTION_NAME.PHONE_SKINS)
+      .doc(email)
+      .get();
+
+    const avatarsData = avatarsSnapshot.data();
+    const phoneSkinsData = phoneSkinsSnapshot.data();
+
+    if (avatarsData && phoneSkinsData) {
+      let ownedAvatars: Array<string> = [];
+      Object.keys(avatarsData).forEach((avatarId) => {
+        if (avatarsData[avatarId]) {
+          ownedAvatars.push(avatarId);
+        }
+      });
+
+      let ownedPhoneSkins: Array<string> = [];
+      Object.keys(phoneSkinsData).forEach((phoneSkinId) => {
+        if (phoneSkinsData[phoneSkinId]) {
+          ownedPhoneSkins.push(phoneSkinId);
+        }
+      });
+
+      let response = {
+        avatars: ownedAvatars,
+        phoneSkins: ownedPhoneSkins,
+      };
+
+      res.set({ "Access-Control-Allow-Origin": "*" });
+      res.send({
+        success: true,
+        message: "OK.",
+        token: jwt.sign(response, SECRET_KEY),
+      });
+    } else {
+      res.set({ "Access-Control-Allow-Origin": "*" });
+      res.send({
+        success: false,
+        message: "Error occured! No data found",
+        token: "",
+      });
+    }
+  }
+);

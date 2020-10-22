@@ -31,6 +31,10 @@ export default function MainScene(props: Props) {
     });
   };
 
+  let onAvatarPress = () => {
+    props.navigation.navigate('EditProfileScene', { userData });
+  };
+
   const DRAWER_CONTENTS: Array<Content> = [
     {
       title: 'Home',
@@ -45,7 +49,8 @@ export default function MainScene(props: Props) {
     },
     {
       title: 'Journey',
-      component: () => JourneyScene(props),
+      component: () =>
+        JourneyScene({ ...props, userPhoneSkin: userData.phoneSkin }),
       icon: () => (
         <MaterialCommunityIcons
           name="book"
@@ -101,7 +106,11 @@ export default function MainScene(props: Props) {
       fallback={Loading}
     >
       <View style={styles.container}>
-        <Drawer contents={DRAWER_CONTENTS} userData={userData} />
+        <Drawer
+          contents={DRAWER_CONTENTS}
+          userData={userData}
+          onAvatarPress={onAvatarPress}
+        />
       </View>
     </Fetcher>
   );

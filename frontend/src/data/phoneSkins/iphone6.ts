@@ -10,11 +10,11 @@ const iphone6 = {
   },
   renderArea: {
     offset: {
-      top: 72,
+      top: 71,
       left: 12,
     },
-    width: 176,
-    height: 312,
+    width: 178,
+    height: 313,
   },
   price: 0,
 };

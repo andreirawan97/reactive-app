@@ -25,13 +25,11 @@ export default function ShopScene(props: Props) {
   let { reduceCurrency } = props;
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedItems, setSelectedItems] = useState(shopItems.avatars);
+  const [selectedItems, setSelectedItems] = useState<
+    Array<Avatar> | Array<PhoneSkin>
+  >(shopItems.avatars);
 
-  const itemTypes: Array<'avatar' | 'avatarBorder' | 'phoneSkin'> = [
-    'avatar',
-    'avatarBorder',
-    'phoneSkin',
-  ];
+  const itemTypes: Array<'avatar' | 'phoneSkin'> = ['avatar', 'phoneSkin'];
 
   const ProcessingModalContent = () => (
     <View
@@ -123,10 +121,6 @@ export default function ShopScene(props: Props) {
       component: ShopContent,
     },
     {
-      headerText: 'Avatar Border',
-      component: ShopContent,
-    },
-    {
       headerText: 'Phone Skin',
       component: ShopContent,
     },
@@ -140,15 +134,9 @@ export default function ShopScene(props: Props) {
         setCurrentIndex(newIndex);
         break;
       }
-      // Avatar Border
-      case 1: {
-        setSelectedItems([]);
-        setCurrentIndex(newIndex);
-        break;
-      }
       // Phone Skin
-      case 2: {
-        setSelectedItems([]);
+      case 1: {
+        setSelectedItems(shopItems.phoneSkins);
         setCurrentIndex(newIndex);
         break;
       }

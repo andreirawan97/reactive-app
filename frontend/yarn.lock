@@ -1080,6 +1080,11 @@
     xmlbuilder "^14.0.0"
     xmldom "~0.1.31"
 
+"@expo/style-utils@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@expo/style-utils/-/style-utils-1.0.2.tgz#0955f65f2a11a72e5bc1e30cb3814f80461195cf"
+  integrity sha512-pYrmyryV4SCnimQAXI+e1zysu1cFWXs8SYtyLI08p2Je/OiITcyuVyrytaCaSHaw2CgVzijyy4rPX4kJBbCxtg==
+
 "@expo/vector-icons@^10.0.2":
   version "10.2.0"
   resolved "https://registry.yarnpkg.com/@expo/vector-icons/-/vector-icons-10.2.0.tgz#3c70656683a6a873e18efc00bc61fc160a80dc55"

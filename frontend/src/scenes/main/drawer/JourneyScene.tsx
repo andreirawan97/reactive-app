@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
 
 import { journey, Section, Stage } from '../../../data/journey';
@@ -18,11 +19,14 @@ import { Fetcher } from '../../../core-ui';
 import { Response } from '../../../types/firestore';
 import { UserJourney, dummyUserJourney } from '../../../fixtures/journey';
 import SVG from '../../../../assets/svg';
+import { LevelButton } from '../../../components';
 
 const getUserJourneyURL = `${FIREBASE_URL}${ENDPOINT.GET_USER_JOURNEY}`;
 const requestBody = { token: getFromStorage(LOCALSTORAGE_KEYS.TOKEN) };
 
-type Props = {} & NavigationScreenProps;
+type Props = {
+  userPhoneSkin: string;
+} & NavigationScreenProps;
 
 export default function JourneyScene(props: Props) {
   const [userJourney, setUserJourney] = useState<UserJourney>(dummyUserJourney);
@@ -75,6 +79,27 @@ export default function JourneyScene(props: Props) {
     );
   };
 
+  const animatedTranslateValue = new Animated.Value(150);
+  const animatedFadeValue = new Animated.Value(0);
+
+  Animated.parallel([
+    Animated.timing(animatedTranslateValue, {
+      toValue: 0,
+      duration: 250,
+      useNativeDriver: true,
+    }),
+    Animated.timing(animatedFadeValue, {
+      toValue: 1,
+      duration: 250,
+      useNativeDriver: true,
+    }),
+  ]).start();
+
+  const animatedStyle = {
+    transform: [{ translateX: animatedTranslateValue }],
+    opacity: animatedFadeValue,
+  };
+
   return (
     <Fetcher
       method="POST"
@@ -93,7 +118,7 @@ export default function JourneyScene(props: Props) {
             />
           ))}
         </ScrollView>
-        <View style={styles.levelsContainer}>
+        <Animated.View style={[styles.levelsContainer, animatedStyle]}>
           <Text style={styles.levelsStageNameText}>{currentStage.name}</Text>
           <Text style={styles.stageDescriptionText}>
             {currentStage.description}
@@ -103,19 +128,19 @@ export default function JourneyScene(props: Props) {
             {currentStage.levels.map((level, i) => {
               if (userJourney[currentStage.id][i].unlocked) {
                 return (
-                  <TouchableOpacity
+                  <LevelButton
                     key={i}
-                    style={styles.levelSelector}
+                    index={i}
+                    highScore={userJourney[currentStage.id][i].highScore}
                     onPress={() =>
                       props.navigation.navigate('LevelScene', {
                         currentLevelData: level,
                         currentLevelUserData: userJourney,
                         stageId: currentStage.id,
+                        userPhoneSkin: props.userPhoneSkin,
                       })
                     }
-                  >
-                    <Text style={styles.levelText}>{i + 1}</Text>
-                  </TouchableOpacity>
+                  />
                 );
               } else {
                 return (
@@ -126,7 +151,7 @@ export default function JourneyScene(props: Props) {
               }
             })}
           </View>
-        </View>
+        </Animated.View>
       </View>
     </Fetcher>
   );
@@ -176,6 +201,7 @@ const styles = StyleSheet.create({
     padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 20,
   },
   stageNameText: {
     fontSize: 22,
@@ -197,16 +223,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
-  levelSelector: {
-    borderRadius: 20,
-    height: 90,
-    width: 90,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.PRIMARY,
-    marginBottom: 20,
-    marginRight: 20,
-  },
   lockedLevelSelector: {
     borderRadius: 20,
     height: 90,
@@ -216,11 +232,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#a0a0a0',
     marginBottom: 20,
     marginRight: 20,
-  },
-  levelText: {
-    color: COLORS.PRIMARY_TEXT,
-    fontWeight: 'bold',
-    fontSize: 36,
   },
   stageIcon: {
     marginRight: 20,
