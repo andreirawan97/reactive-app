@@ -54,7 +54,7 @@ export const signup = functions.https.onRequest(async (req, res) => {
   const emptyUserData = {
     email: "",
     name: "",
-    currency: 999999,
+    currency: 0,
     currentExp: 0,
     avatar: "noAvatar",
     phoneSkin: "iphone6",

@@ -1,10 +1,10 @@
 export const LOCAL_URL =
-  'http://localhost:5001/reactive-app-604a8/us-central1/';
+  'http://localhost:5001/reactive-app-aa8ad/us-central1/';
 
 export const PRODUCTION_URL =
-  'https://us-central1-reactive-app-604a8.cloudfunctions.net/';
+  'https://us-central1-reactive-app-aa8ad.cloudfunctions.net/';
 
-export const FIREBASE_URL = LOCAL_URL;
+export const FIREBASE_URL = PRODUCTION_URL;
 
 export const ENDPOINT = {
   LOGIN: 'login',

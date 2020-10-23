@@ -10,11 +10,24 @@
     "functions": {
       "port": 5001
     },
+    "ui": {
+      "enabled": true
+    },
     "firestore": {
       "port": 8080
     },
-    "ui": {
-      "enabled": true
+    "database": {
+      "port": 9000
     }
+  },
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
   }
 }

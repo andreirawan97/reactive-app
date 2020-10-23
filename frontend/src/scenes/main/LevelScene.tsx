@@ -169,7 +169,7 @@ export default function LevelScene(props: Props) {
         <FinishedIcon />
         <Text style={styles.modalHeaderText}>Finished!</Text>
         <Text style={styles.modalCompletionTimeText}>
-          Completion time: {msToCompletionTime(currentTime)}
+          Completion time: {msToCompletionTime(currentTime, timeLimit)}
         </Text>
         <Text style={styles.modalScoreText}>Score: {finalScore}</Text>
 

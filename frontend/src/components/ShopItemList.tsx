@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
+    paddingLeft: 3,
   },
   shopItemCardContainer: {
     borderRadius: 24,
