@@ -29,7 +29,7 @@ import phoneSkins, { PhoneSkin, PhoneSkinId } from '../../data/phoneSkins';
 
 type Props = {} & NavigationScreenProps;
 
-const email = decodeToken(getFromStorage(LOCALSTORAGE_KEYS.TOKEN) || '');
+const username = decodeToken(getFromStorage(LOCALSTORAGE_KEYS.TOKEN) || '');
 const requestBody = { token: getFromStorage(LOCALSTORAGE_KEYS.TOKEN) };
 const updateUserURL = `${FIREBASE_URL}${ENDPOINT.UPDATE_USER_PROFILE}`;
 const getCustomizationItemURL = `${FIREBASE_URL}${ENDPOINT.GET_CUSTOMIZATION_ITEM}`;
@@ -72,7 +72,7 @@ export default function EditProfileScene(props: Props) {
     });
 
     let rawRequestBody = {
-      email,
+      username,
       phoneSkin: selectedPhoneSkin,
       avatar: selectedAvatar,
     };

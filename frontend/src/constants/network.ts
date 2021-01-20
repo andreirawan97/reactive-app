@@ -1,5 +1,5 @@
 export const LOCAL_URL =
-  'http://localhost:5001/reactive-app-aa8ad/us-central1/';
+  'http://localhost:5005/reactive-app-aa8ad/us-central1/';
 
 export const PRODUCTION_URL =
   'https://us-central1-reactive-app-aa8ad.cloudfunctions.net/';
@@ -18,4 +18,6 @@ export const ENDPOINT = {
   SHOP_TRANSACTION: 'shopTransaction',
   UPDATE_USER_PROFILE: 'updateUserProfile',
   GET_CUSTOMIZATION_ITEM: 'getCustomizationItem',
+  GET_GLOBAL_LEADERBOARD: 'getGlobalLeaderboard',
+  GET_USER_FRIENDS: 'getUserFriends',
 };

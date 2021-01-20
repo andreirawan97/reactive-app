@@ -13,7 +13,7 @@ import homebrewFetch from '../../helpers/homebrewFetch';
 
 export default function AuthScene() {
   const [isRequesting, setRequesting] = useState(false);
-  const [email, setEmail] = useState('andreirawan97@gmail.com');
+  const [username, setUsername] = useState('andreirawan97');
   const [password, setPassword] = useState('1234');
   const [name, setName] = useState('');
   const [errorMessageLogin, setErrorMessageLogin] = useState('');
@@ -21,9 +21,9 @@ export default function AuthScene() {
 
   let isFieldEmpty = (field: 'login' | 'signup') => {
     if (field === 'login') {
-      return !!(email === '' || password === '');
+      return !!(username === '' || password === '');
     } else {
-      return !!(email === '' || password === '' || name === '');
+      return !!(username === '' || password === '' || name === '');
     }
   };
 
@@ -36,7 +36,7 @@ export default function AuthScene() {
 
       const URL = `${FIREBASE_URL}${ENDPOINT.LOGIN}`;
       const response = await homebrewFetch('POST', URL, {
-        email,
+        username,
         password: md5(password),
       });
       const data = await response.json();
@@ -60,7 +60,7 @@ export default function AuthScene() {
 
       const URL = `${FIREBASE_URL}${ENDPOINT.SIGNUP}`;
       const response = await homebrewFetch('POST', URL, {
-        email,
+        username,
         password: md5(password),
         name,
       });
@@ -91,10 +91,10 @@ export default function AuthScene() {
   const LoginForm = () => (
     <View>
       <TextInput
-        label="Email"
+        label="Username"
         containerStyle={{ marginBottom: 20 }}
-        value={email}
-        onChangeText={setEmail}
+        value={username}
+        onChangeText={setUsername}
       />
       <TextInput
         label="Password"
@@ -123,10 +123,10 @@ export default function AuthScene() {
         onChangeText={setName}
       />
       <TextInput
-        label="Email"
+        label="Username"
         containerStyle={{ marginBottom: 20 }}
-        value={email}
-        onChangeText={setEmail}
+        value={username}
+        onChangeText={setUsername}
       />
       <TextInput
         label="Password"

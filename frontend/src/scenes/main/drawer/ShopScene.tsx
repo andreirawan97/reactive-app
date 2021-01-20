@@ -72,9 +72,9 @@ export default function ShopScene(props: Props) {
       content: ProcessingModalContent,
     });
 
-    const email = decodeToken(getFromStorage(LOCALSTORAGE_KEYS.TOKEN) || '');
+    const username = decodeToken(getFromStorage(LOCALSTORAGE_KEYS.TOKEN) || '');
     let rawRequestBody = {
-      email,
+      username,
       type: itemTypes[currentIndex],
       id: item.id,
       price: item.price,

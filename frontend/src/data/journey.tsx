@@ -1,4 +1,6 @@
 import React, { ReactElement } from 'react';
+import { Image, ImageProps } from 'react-native';
+import { JavascriptIcon } from '../../assets';
 
 import SVG from '../../assets/svg';
 
@@ -6,7 +8,7 @@ import { helloWorldLevels } from './levels/helloWorld';
 import { perspectiveLevels } from './levels/perspective';
 import { Reward } from './rewards';
 
-export type StageId = 'helloWorld' | 'perspective';
+export type StageId = 'helloWorld' | 'perspective' | 'tutorialJavascript';
 
 export type Code = {
   tabCount: number;
@@ -27,13 +29,22 @@ export type Level = {
   difficulty: number; // scale 1-5. Final score (timeLimitMax - currentTimeLimit) / 1000 * difficulty
 };
 
-export type Stage = {
-  id: StageId;
-  icon: () => ReactElement;
-  name: string;
-  levels: Array<Level>;
-  description: string;
-};
+export type Stage =
+  | {
+      type: 'challenge';
+      id: StageId;
+      icon: () => ReactElement;
+      name: string;
+      levels: Array<Level>;
+      description: string;
+    }
+  | {
+      type: 'tutorial';
+      id: StageId;
+      icon: (iconProps?: Omit<ImageProps, 'source'>) => ReactElement;
+      name: string;
+      description: string;
+    };
 
 export type Section = {
   name: string;
@@ -44,9 +55,28 @@ type Journey = Array<Section>;
 
 export const journey: Journey = [
   {
+    name: 'Introduction',
+    stages: [
+      {
+        type: 'tutorial',
+        id: 'tutorialJavascript',
+        icon: (iconProps) => (
+          <Image
+            source={JavascriptIcon}
+            style={{ width: 45, height: 45 }}
+            {...iconProps}
+          />
+        ),
+        name: 'JavaScript',
+        description: 'Learn the basics of JavaScript!',
+      },
+    ],
+  },
+  {
     name: "Beginner's Guide",
     stages: [
       {
+        type: 'challenge',
         id: 'helloWorld',
         icon: () =>
           React.createElement(SVG.helloWorldSVG, { width: 50, height: 50 }),
@@ -56,6 +86,7 @@ export const journey: Journey = [
         levels: helloWorldLevels,
       },
       {
+        type: 'challenge',
         id: 'perspective',
         icon: () =>
           React.createElement(SVG.perspectiveSVG, { width: 50, height: 50 }),

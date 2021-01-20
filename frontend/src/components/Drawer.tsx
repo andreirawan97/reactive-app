@@ -30,7 +30,7 @@ type Props = {
 
 export default function Drawer(props: Props) {
   let { contents, userData, defaultIndex, onAvatarPress } = props;
-  let { currency, currentExp, name, avatar } = userData;
+  let { currency, currentExp, name, avatar, username } = userData;
 
   const [selectedIndex, setSelectedIndex] = useState(
     defaultIndex ? defaultIndex : 0,
@@ -113,6 +113,10 @@ export default function Drawer(props: Props) {
           />
           <Text style={styles.name} numberOfLines={1}>
             {name}
+          </Text>
+
+          <Text style={styles.username} numberOfLines={1}>
+            @{username}
           </Text>
 
           <View style={styles.currencyContainer}>
@@ -203,7 +207,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: COLORS.PRIMARY_TEXT,
-    marginBottom: 12,
+    marginBottom: 3,
+  },
+  username: {
+    color: COLORS.PRIMARY_TEXT,
+    fontSize: 14,
+    marginBottom: 8,
+    fontWeight: '300',
   },
   level: {
     fontSize: 14,

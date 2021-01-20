@@ -3,7 +3,7 @@ import { AvatarId } from '../data/avatars';
 import { PhoneSkinId } from '../data/phoneSkins';
 
 export type UserData = {
-  email: string;
+  username: string;
   name: string;
   currency: number; // This meant for read-only. Transaction will be checked in backend.
   currentExp: number;
@@ -13,7 +13,7 @@ export type UserData = {
 };
 
 export const userDataMock: UserData = {
-  email: 'andreirawan97@gmail.com',
+  username: 'andreirawan97',
   name: 'Andre Irawan',
   currency: 1000,
   currentExp: 3045,
@@ -23,7 +23,7 @@ export const userDataMock: UserData = {
 };
 
 export const emptyUserData: UserData = {
-  email: '',
+  username: '',
   name: '',
   currency: 0,
   currentExp: 0,

@@ -16,11 +16,12 @@ const firestore = admin.firestore();
 const SECRET_KEY = "hush"; // TODO: Find a better way to store it in production
 
 export const login = functions.https.onRequest(async (req, res) => {
-  const { email, password } = JSON.parse(req.body);
+  const { username, password } = JSON.parse(req.body);
+  console.log(username, password);
 
   const secretSnapshot = await firestore
     .collection(COLLECTION_NAME.SECRETS)
-    .doc(email)
+    .doc(username)
     .get();
 
   const secretData = secretSnapshot.data();
@@ -28,7 +29,7 @@ export const login = functions.https.onRequest(async (req, res) => {
   if (secretData && password === secretData.password) {
     const userSnapshot = await firestore
       .collection(COLLECTION_NAME.USERS)
-      .doc(email)
+      .doc(username)
       .get();
 
     // userData always return something.
@@ -38,13 +39,13 @@ export const login = functions.https.onRequest(async (req, res) => {
     res.send({
       success: true,
       message: "OK",
-      token: jwt.sign(userData.email, SECRET_KEY),
+      token: jwt.sign(userData.username, SECRET_KEY),
     });
   } else {
     res.set({ "Access-Control-Allow-Origin": "*" });
     res.send({
       success: false,
-      message: "Email or password incorrect!",
+      message: "Username or password incorrect!",
       token: "",
     });
   }
@@ -52,7 +53,7 @@ export const login = functions.https.onRequest(async (req, res) => {
 
 export const signup = functions.https.onRequest(async (req, res) => {
   const emptyUserData = {
-    email: "",
+    username: "",
     name: "",
     currency: 0,
     currentExp: 0,
@@ -63,11 +64,11 @@ export const signup = functions.https.onRequest(async (req, res) => {
     friendList: [],
   };
 
-  const { email, password, name } = JSON.parse(req.body);
+  const { username, password, name } = JSON.parse(req.body);
 
   const userSnapshot = await firestore
     .collection(COLLECTION_NAME.USERS)
-    .doc(email)
+    .doc(username)
     .get();
 
   const userData = userSnapshot.data();
@@ -82,48 +83,48 @@ export const signup = functions.https.onRequest(async (req, res) => {
   } else {
     await firestore
       .collection(COLLECTION_NAME.USERS)
-      .doc(email)
+      .doc(username)
       .set({
         ...emptyUserData,
-        email,
+        username,
         name,
       });
 
-    await firestore.collection(COLLECTION_NAME.SECRETS).doc(email).set({
-      email,
+    await firestore.collection(COLLECTION_NAME.SECRETS).doc(username).set({
+      username,
       password,
     });
 
     await firestore
       .collection(COLLECTION_NAME.ACHIEVEMENTS)
-      .doc(email)
+      .doc(username)
       .set(emptyAchievementData);
 
     await firestore
       .collection(COLLECTION_NAME.FRIENDS)
-      .doc(email)
+      .doc(username)
       .set(emptyFriendList);
 
     await firestore
       .collection(COLLECTION_NAME.PHONE_SKINS)
-      .doc(email)
+      .doc(username)
       .set(emptyPhoneSkinsData);
 
     await firestore
       .collection(COLLECTION_NAME.JOURNEY)
-      .doc(email)
+      .doc(username)
       .set(emptyJourneyData);
 
     await firestore
       .collection(COLLECTION_NAME.AVATARS)
-      .doc(email)
+      .doc(username)
       .set(emptyAvatarData);
 
     res.set({ "Access-Control-Allow-Origin": "*" });
     res.send({
       success: true,
       message: "OK",
-      token: jwt.sign(email, SECRET_KEY),
+      token: jwt.sign(username, SECRET_KEY),
     });
   }
 });
@@ -132,11 +133,11 @@ export const getUserData = functions.https.onRequest(async (req, res) => {
   let { token } = JSON.parse(req.body);
 
   try {
-    let email = jwt.verify(token, SECRET_KEY) as string;
+    let username = jwt.verify(token, SECRET_KEY) as string;
 
     const userSnapshot = await firestore
       .collection(COLLECTION_NAME.USERS)
-      .doc(email)
+      .doc(username)
       .get();
 
     const userData = userSnapshot.data();
@@ -169,11 +170,11 @@ export const getUserData = functions.https.onRequest(async (req, res) => {
 export const getUserAchievements = functions.https.onRequest(
   async (req, res) => {
     let { token } = JSON.parse(req.body);
-    let email = jwt.verify(token, SECRET_KEY) as string;
+    let username = jwt.verify(token, SECRET_KEY) as string;
 
     const achievementsSnapshot = await firestore
       .collection(COLLECTION_NAME.ACHIEVEMENTS)
-      .doc(email)
+      .doc(username)
       .get();
 
     const achievementsData = achievementsSnapshot.data();
@@ -198,11 +199,11 @@ export const getUserAchievements = functions.https.onRequest(
 
 export const getUserJourney = functions.https.onRequest(async (req, res) => {
   let { token } = JSON.parse(req.body);
-  let email = jwt.verify(token, SECRET_KEY) as string;
+  let username = jwt.verify(token, SECRET_KEY) as string;
 
   const journeySnapshot = await firestore
     .collection(COLLECTION_NAME.JOURNEY)
-    .doc(email)
+    .doc(username)
     .get();
 
   const journeyData = journeySnapshot.data();
@@ -226,11 +227,11 @@ export const getUserJourney = functions.https.onRequest(async (req, res) => {
 
 export const getUserAvatars = functions.https.onRequest(async (req, res) => {
   let { token } = JSON.parse(req.body);
-  let email = jwt.verify(token, SECRET_KEY) as string;
+  let username = jwt.verify(token, SECRET_KEY) as string;
 
   const avatarsSnapshot = await firestore
     .collection(COLLECTION_NAME.AVATARS)
-    .doc(email)
+    .doc(username)
     .get();
 
   const avatarsData = avatarsSnapshot.data();
@@ -254,11 +255,11 @@ export const getUserAvatars = functions.https.onRequest(async (req, res) => {
 
 export const getUserPhoneSkins = functions.https.onRequest(async (req, res) => {
   let { token } = JSON.parse(req.body);
-  let email = jwt.verify(token, SECRET_KEY) as string;
+  let username = jwt.verify(token, SECRET_KEY) as string;
 
   const phoneSkinsSnapshot = await firestore
     .collection(COLLECTION_NAME.PHONE_SKINS)
-    .doc(email)
+    .doc(username)
     .get();
 
   const phoneSkinsData = phoneSkinsSnapshot.data();
@@ -284,11 +285,11 @@ export const updateJourneyProgress = functions.https.onRequest(
   async (req, res) => {
     let { token } = JSON.parse(req.body);
 
-    let { email, id, levelNo, score, rewards } = jwt.verify(
+    let { username, id, levelNo, score, rewards } = jwt.verify(
       token,
       SECRET_KEY
     ) as {
-      email: string;
+      username: string;
       id: string;
       levelNo: number;
       score: number;
@@ -297,15 +298,15 @@ export const updateJourneyProgress = functions.https.onRequest(
 
     const journeySnapshot = await firestore
       .collection(COLLECTION_NAME.JOURNEY)
-      .doc(email)
+      .doc(username)
       .get();
     const userSnapshot = await firestore
       .collection(COLLECTION_NAME.USERS)
-      .doc(email)
+      .doc(username)
       .get();
     const achievementSnapshot = await firestore
       .collection(COLLECTION_NAME.ACHIEVEMENTS)
-      .doc(email)
+      .doc(username)
       .get();
 
     const journeyData = journeySnapshot.data();
@@ -347,17 +348,17 @@ export const updateJourneyProgress = functions.https.onRequest(
 
       await firestore
         .collection(COLLECTION_NAME.JOURNEY)
-        .doc(email)
+        .doc(username)
         .set(journeyData);
 
       await firestore
         .collection(COLLECTION_NAME.USERS)
-        .doc(email)
+        .doc(username)
         .set(userData);
 
       await firestore
         .collection(COLLECTION_NAME.ACHIEVEMENTS)
-        .doc(email)
+        .doc(username)
         .set(achievementData);
 
       res.set({ "Access-Control-Allow-Origin": "*" });
@@ -379,8 +380,8 @@ export const updateJourneyProgress = functions.https.onRequest(
 
 export const shopTransaction = functions.https.onRequest(async (req, res) => {
   let { token } = JSON.parse(req.body);
-  let { type, id, price, email } = jwt.verify(token, SECRET_KEY) as {
-    email: string;
+  let { type, id, price, username } = jwt.verify(token, SECRET_KEY) as {
+    username: string;
     type: string;
     id: string;
     price: number;
@@ -388,7 +389,7 @@ export const shopTransaction = functions.https.onRequest(async (req, res) => {
 
   const userSnapshot = await firestore
     .collection(COLLECTION_NAME.USERS)
-    .doc(email)
+    .doc(username)
     .get();
 
   const userData = userSnapshot.data();
@@ -399,7 +400,7 @@ export const shopTransaction = functions.https.onRequest(async (req, res) => {
         case "avatar": {
           const avatarSnapshot = await firestore
             .collection(COLLECTION_NAME.AVATARS)
-            .doc(email)
+            .doc(username)
             .get();
           const avatarData = avatarSnapshot.data();
 
@@ -409,12 +410,12 @@ export const shopTransaction = functions.https.onRequest(async (req, res) => {
 
             await firestore
               .collection(COLLECTION_NAME.AVATARS)
-              .doc(email)
+              .doc(username)
               .set(avatarData);
 
             await firestore
               .collection(COLLECTION_NAME.USERS)
-              .doc(email)
+              .doc(username)
               .set(userData);
 
             res.set({ "Access-Control-Allow-Origin": "*" });
@@ -436,7 +437,7 @@ export const shopTransaction = functions.https.onRequest(async (req, res) => {
         case "phoneSkin": {
           const phoneSkinSnapshot = await firestore
             .collection(COLLECTION_NAME.PHONE_SKINS)
-            .doc(email)
+            .doc(username)
             .get();
           const phoneSkinData = phoneSkinSnapshot.data();
 
@@ -446,12 +447,12 @@ export const shopTransaction = functions.https.onRequest(async (req, res) => {
 
             await firestore
               .collection(COLLECTION_NAME.PHONE_SKINS)
-              .doc(email)
+              .doc(username)
               .set(phoneSkinData);
 
             await firestore
               .collection(COLLECTION_NAME.USERS)
-              .doc(email)
+              .doc(username)
               .set(userData);
 
             res.set({ "Access-Control-Allow-Origin": "*" });
@@ -500,15 +501,15 @@ export const shopTransaction = functions.https.onRequest(async (req, res) => {
 
 export const updateUserProfile = functions.https.onRequest(async (req, res) => {
   let { token } = JSON.parse(req.body);
-  let { email, phoneSkin, avatar } = jwt.verify(token, SECRET_KEY) as {
-    email: string;
+  let { username, phoneSkin, avatar } = jwt.verify(token, SECRET_KEY) as {
+    username: string;
     phoneSkin: string;
     avatar: string;
   };
 
   const userSnapshot = await firestore
     .collection(COLLECTION_NAME.USERS)
-    .doc(email)
+    .doc(username)
     .get();
   const userData = userSnapshot.data();
 
@@ -516,7 +517,10 @@ export const updateUserProfile = functions.https.onRequest(async (req, res) => {
     userData.phoneSkin = phoneSkin;
     userData.avatar = avatar;
 
-    await firestore.collection(COLLECTION_NAME.USERS).doc(email).set(userData);
+    await firestore
+      .collection(COLLECTION_NAME.USERS)
+      .doc(username)
+      .set(userData);
 
     res.set({ "Access-Control-Allow-Origin": "*" });
     res.send({
@@ -537,15 +541,15 @@ export const updateUserProfile = functions.https.onRequest(async (req, res) => {
 export const getCustomizationItem = functions.https.onRequest(
   async (req, res) => {
     let { token } = JSON.parse(req.body);
-    let email = jwt.verify(token, SECRET_KEY) as string;
+    let username = jwt.verify(token, SECRET_KEY) as string;
 
     const avatarsSnapshot = await firestore
       .collection(COLLECTION_NAME.AVATARS)
-      .doc(email)
+      .doc(username)
       .get();
     const phoneSkinsSnapshot = await firestore
       .collection(COLLECTION_NAME.PHONE_SKINS)
-      .doc(email)
+      .doc(username)
       .get();
 
     const avatarsData = avatarsSnapshot.data();
@@ -587,3 +591,69 @@ export const getCustomizationItem = functions.https.onRequest(
     }
   }
 );
+
+export const getGlobalLeaderboard = functions.https.onRequest(
+  async (req, res) => {
+    let globalLeaderboardData: Array<Object> = [];
+
+    const globalLeaderboardSnapshot = await firestore
+      .collection(COLLECTION_NAME.USERS)
+      .orderBy("currentExp", "desc")
+      .limit(10)
+      .get();
+
+    globalLeaderboardSnapshot.forEach((item) => {
+      globalLeaderboardData.push(item.data());
+    });
+
+    console.log(globalLeaderboardData);
+
+    res.set({ "Access-Control-Allow-Origin": "*" });
+    res.send({
+      success: true,
+      message: "OK.",
+      token: jwt.sign({ data: globalLeaderboardData }, SECRET_KEY),
+    });
+  }
+);
+
+export const getUserFriends = functions.https.onRequest(async (req, res) => {
+  let { token } = JSON.parse(req.body);
+  let { username } = jwt.verify(token, SECRET_KEY) as {
+    username: string;
+  };
+  const friendsSnapshot = await firestore
+    .collection(COLLECTION_NAME.FRIENDS)
+    .doc(username)
+    .get();
+
+  const friendsData = friendsSnapshot.data();
+
+  if (friendsData) {
+    let friendList: Array<any> = [];
+
+    friendsData.forEach(async (friendUsername: string) => {
+      const friendDataSnapshot = await firestore
+        .collection(COLLECTION_NAME.FRIENDS)
+        .doc(friendUsername)
+        .get();
+
+      const friendData = friendDataSnapshot.data();
+      friendList.push(friendData);
+    });
+
+    res.set({ "Access-Control-Allow-Origin": "*" });
+    res.send({
+      success: true,
+      message: "OK.",
+      token: friendList,
+    });
+  } else {
+    res.set({ "Access-Control-Allow-Origin": "*" });
+    res.send({
+      success: false,
+      message: "Your username is not found!",
+      token: "",
+    });
+  }
+});

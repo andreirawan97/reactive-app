@@ -150,7 +150,7 @@ export default function LevelScene(props: Props) {
     });
 
     let requestBodyObject = {
-      email: decodeToken(getFromStorage(LOCALSTORAGE_KEYS.TOKEN) || ''),
+      username: decodeToken(getFromStorage(LOCALSTORAGE_KEYS.TOKEN) || ''),
       id: stageId,
       levelNo,
       score: finalScore,

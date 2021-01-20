@@ -1,21 +1,23 @@
+import { AvatarId } from '../data/avatars';
+
 type Friend = {
-  profilePicBase64: string;
+  avatar: AvatarId;
   currentExp: number;
   name: string;
-  email: string;
+  username: string;
 };
 
 export const friendListMock: Array<Friend> = [
   {
-    email: 'nolifegaming@gmail.com',
-    currentExp: 98000,
+    username: 'nolifegaming',
+    currentExp: 98321,
     name: 'No Life Gaming',
-    profilePicBase64: '',
+    avatar: 'fallenCoder',
   },
   {
-    email: 'tes@gmail.com',
+    username: 'tes',
     currentExp: 0,
     name: 'Tessss',
-    profilePicBase64: '',
+    avatar: 'noAvatar',
   },
 ];

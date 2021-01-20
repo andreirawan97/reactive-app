@@ -7,10 +7,11 @@ import {
   ScrollView,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Avatar } from 'react-native-elements';
 
 import SVG from '../../../../assets/svg';
 import { Card } from '../../../components';
-import { Button, Fetcher } from '../../../core-ui';
+import { Button, Fetcher, Loading, TextInput } from '../../../core-ui';
 import { getAchievement } from '../../../helpers/achievement';
 import { COLORS } from '../../../constants/styles';
 import { friendListMock } from '../../../fixtures/friend';
@@ -23,10 +24,12 @@ import { Response } from '../../../types/firestore';
 import { UserAchievements } from '../../../fixtures/achievements';
 import { showModal } from '../../../core-ui/ModalProvider';
 import { achievements } from '../../../data/achievements';
+import { getAvatarSource } from '../../../helpers/avatar';
 
 const tokenReqBody = { token: getFromStorage(LOCALSTORAGE_KEYS.TOKEN) };
 
 const getUserAchievementsURL = `${FIREBASE_URL}${ENDPOINT.GET_USER_ACHIEVEMENTS}`;
+const getFriendsURL = `${FIREBASE_URL}${ENDPOINT.GET_USER_FRIENDS}`;
 
 type Props = {} & NavigationScreenProps;
 
@@ -93,12 +96,75 @@ export default function HomeScene(props: Props) {
     );
   };
 
+  let SearchFriendModalContent = () => {
+    return (
+      <View
+        style={{ flexDirection: 'row', marginRight: 12, alignItems: 'center' }}
+      >
+        <View
+          style={{
+            backgroundColor: '#F2F5FA',
+            flex: 1,
+            paddingVertical: 8,
+            paddingHorizontal: 12,
+            justifyContent: 'center',
+            borderColor: '#F2F5FA',
+            borderRadius: 12,
+            marginRight: 12,
+          }}
+        >
+          <TextInput
+            style={{ fontSize: 12, color: 'grey' }}
+            placeholder="Input friend username..."
+          />
+        </View>
+
+        <TouchableOpacity>
+          <Text
+            style={{ color: COLORS.PRIMARY, fontSize: 20, fontWeight: '600' }}
+          >
+            Add Friend
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const ProcessingModalContent = () => (
+    <View
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 60,
+      }}
+    >
+      <View style={{ marginBottom: 26 }}>
+        <Loading />
+      </View>
+      <Text style={{ fontSize: 16 }}>Processing Transaction...</Text>
+    </View>
+  );
+
   let viewAllAchievements = () => {
     showModal({
       content: AchievementModalContent,
       title: 'Achievements',
       containerStyle: {
         width: '60%',
+      },
+    });
+  };
+
+  let showSearchFriend = () => {
+    showModal({
+      content: SearchFriendModalContent,
+      title: 'Search Friend',
+      containerStyle: {
+        width: '60%',
+      },
+      contentContainerStyle: {
+        paddingVertical: 20,
       },
     });
   };
@@ -206,9 +272,36 @@ export default function HomeScene(props: Props) {
     return (
       <ScrollView
         contentContainerStyle={{
-          padding: 20,
+          paddingVertical: 8,
+          paddingHorizontal: 4,
         }}
       >
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: 12,
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#F2F5FA',
+              flex: 1,
+              paddingVertical: 8,
+              paddingHorizontal: 12,
+              justifyContent: 'center',
+              borderColor: '#F2F5FA',
+              borderRadius: 12,
+              marginRight: 8,
+            }}
+            onPress={showSearchFriend}
+          >
+            <Text style={{ fontSize: 12, color: 'grey' }}>
+              Search friend...
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         {friendListMock.length ? (
           friendListMock.map((friend, i) => (
             <View
@@ -218,17 +311,39 @@ export default function HomeScene(props: Props) {
                 alignItems: 'center',
                 width: '100%',
                 justifyContent: 'space-between',
-                marginBottom: 12,
+                marginBottom: 16,
               }}
             >
-              <View>
-                <Text
-                  style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 8 }}
-                  numberOfLines={1}
-                >
-                  {friend.name}
-                </Text>
-                <Text style={{ fontSize: 12 }}>Level 99</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <Avatar
+                  rounded
+                  source={getAvatarSource(friend.avatar)}
+                  size="small"
+                  containerStyle={{
+                    marginRight: 8,
+                  }}
+                />
+
+                <View>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 'bold',
+                      marginBottom: 5,
+                    }}
+                    numberOfLines={1}
+                  >
+                    {friend.name}
+                  </Text>
+                  <Text style={{ fontSize: 12 }}>
+                    Level {Math.floor(friend.currentExp / 1000) + 1}
+                  </Text>
+                </View>
               </View>
 
               <TouchableOpacity>

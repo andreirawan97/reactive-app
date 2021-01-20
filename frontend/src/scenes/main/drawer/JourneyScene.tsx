@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -15,7 +15,7 @@ import { FIREBASE_URL, ENDPOINT } from '../../../constants/network';
 import { decodeToken } from '../../../helpers/token';
 import { getFromStorage } from '../../../helpers/storage';
 import { LOCALSTORAGE_KEYS } from '../../../constants/keys';
-import { Fetcher } from '../../../core-ui';
+import { Button, Fetcher } from '../../../core-ui';
 import { Response } from '../../../types/firestore';
 import { UserJourney, dummyUserJourney } from '../../../fixtures/journey';
 import SVG from '../../../../assets/svg';
@@ -63,17 +63,10 @@ export default function JourneyScene(props: Props) {
     return (
       <View style={styles.sectionContainer}>
         <Text style={styles.sectionHeaderText}>
-          {index + 1}. {name}
+          {index}. {name}
         </Text>
         {stages.map((stage, i) => (
-          <StageComponent
-            key={i}
-            id={stage.id}
-            name={stage.name}
-            description={stage.description}
-            levels={stage.levels}
-            icon={stage.icon}
-          />
+          <StageComponent key={i} {...stage} />
         ))}
       </View>
     );
@@ -119,38 +112,71 @@ export default function JourneyScene(props: Props) {
           ))}
         </ScrollView>
         <Animated.View style={[styles.levelsContainer, animatedStyle]}>
-          <Text style={styles.levelsStageNameText}>{currentStage.name}</Text>
-          <Text style={styles.stageDescriptionText}>
-            {currentStage.description}
-          </Text>
+          {currentStage.type === 'challenge' ? (
+            <>
+              <Text style={styles.levelsStageNameText}>
+                {currentStage.name}
+              </Text>
+              <Text style={styles.stageDescriptionText}>
+                {currentStage.description}
+              </Text>
 
-          <View style={styles.levelsSelectorContainer}>
-            {currentStage.levels.map((level, i) => {
-              if (userJourney[currentStage.id][i].unlocked) {
-                return (
-                  <LevelButton
-                    key={i}
-                    index={i}
-                    highScore={userJourney[currentStage.id][i].highScore}
-                    onPress={() =>
-                      props.navigation.navigate('LevelScene', {
-                        currentLevelData: level,
-                        currentLevelUserData: userJourney,
-                        stageId: currentStage.id,
-                        userPhoneSkin: props.userPhoneSkin,
-                      })
-                    }
-                  />
-                );
-              } else {
-                return (
-                  <TouchableOpacity key={i} style={styles.lockedLevelSelector}>
-                    <LockIcon />
-                  </TouchableOpacity>
-                );
-              }
-            })}
-          </View>
+              <View style={styles.levelsSelectorContainer}>
+                {currentStage.levels.map((level, i) => {
+                  if (userJourney[currentStage.id][i].unlocked) {
+                    return (
+                      <LevelButton
+                        key={i}
+                        index={i}
+                        highScore={userJourney[currentStage.id][i].highScore}
+                        onPress={() =>
+                          props.navigation.navigate('LevelScene', {
+                            currentLevelData: level,
+                            currentLevelUserData: userJourney,
+                            stageId: currentStage.id,
+                            userPhoneSkin: props.userPhoneSkin,
+                          })
+                        }
+                      />
+                    );
+                  } else {
+                    return (
+                      <TouchableOpacity
+                        key={i}
+                        style={styles.lockedLevelSelector}
+                      >
+                        <LockIcon />
+                      </TouchableOpacity>
+                    );
+                  }
+                })}
+              </View>
+            </>
+          ) : (
+            <View style={styles.tutorialStageContainer}>
+              {currentStage.icon({
+                style: {
+                  width: 120,
+                  height: 120,
+                  marginBottom: 28,
+                },
+              })}
+
+              <Text style={styles.levelsStageNameText}>
+                {currentStage.name}
+              </Text>
+              <Text style={styles.stageDescriptionText}>
+                {currentStage.description}
+              </Text>
+
+              <Button
+                title="Get Started"
+                onPress={() => {}}
+                containerStyle={{ width: '30%', borderRadius: 24 }}
+                titleStyle={{ fontSize: 15 }}
+              />
+            </View>
+          )}
         </Animated.View>
       </View>
     </Fetcher>
@@ -235,5 +261,9 @@ const styles = StyleSheet.create({
   },
   stageIcon: {
     marginRight: 20,
+  },
+  tutorialStageContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
 });
