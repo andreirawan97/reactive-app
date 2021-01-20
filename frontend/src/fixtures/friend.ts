@@ -1,6 +1,6 @@
 import { AvatarId } from '../data/avatars';
 
-type Friend = {
+export type Friend = {
   avatar: AvatarId;
   currentExp: number;
   name: string;

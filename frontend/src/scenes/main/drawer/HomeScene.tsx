@@ -14,7 +14,7 @@ import { Card } from '../../../components';
 import { Button, Fetcher, Loading, TextInput } from '../../../core-ui';
 import { getAchievement } from '../../../helpers/achievement';
 import { COLORS } from '../../../constants/styles';
-import { friendListMock } from '../../../fixtures/friend';
+import { Friend, friendListMock } from '../../../fixtures/friend';
 import { NavigationScreenProps } from '../../../types/navigation';
 import { getFromStorage } from '../../../helpers/storage';
 import { LOCALSTORAGE_KEYS } from '../../../constants/keys';
@@ -41,11 +41,23 @@ export default function HomeScene(props: Props) {
       perspective: false,
     },
   });
+  const [friendList, setFriendList] = useState<Array<Friend>>();
 
   let onSuccessGetUserAchievements = useCallback((response: Response) => {
     let { token } = response;
     let data = decodeToken(token) as UserAchievements;
     setUserAchievements(data);
+  }, []);
+
+  let onSuccessGetFriendList = useCallback((response: Response) => {
+    let { token } = response;
+    let data = decodeToken(token) as {
+      friendList: Array<Friend>;
+    };
+    console.log(data);
+    if (data.friendList.length > 0) {
+      setFriendList(data.friendList);
+    }
   }, []);
 
   let HomeStart = () =>
@@ -268,98 +280,104 @@ export default function HomeScene(props: Props) {
   };
 
   let FriendList = () => {
-    // TODO: Fetch friend list
     return (
-      <ScrollView
-        contentContainerStyle={{
-          paddingVertical: 8,
-          paddingHorizontal: 4,
-        }}
+      <Fetcher
+        method="POST"
+        URL={getFriendsURL}
+        requestBody={tokenReqBody}
+        onSuccess={onSuccessGetFriendList}
       >
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginBottom: 12,
+        <ScrollView
+          contentContainerStyle={{
+            paddingVertical: 8,
+            paddingHorizontal: 4,
           }}
         >
-          <TouchableOpacity
+          <View
             style={{
-              backgroundColor: '#F2F5FA',
-              flex: 1,
-              paddingVertical: 8,
-              paddingHorizontal: 12,
-              justifyContent: 'center',
-              borderColor: '#F2F5FA',
-              borderRadius: 12,
-              marginRight: 8,
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginBottom: 12,
             }}
-            onPress={showSearchFriend}
           >
-            <Text style={{ fontSize: 12, color: 'grey' }}>
-              Search friend...
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {friendListMock.length ? (
-          friendListMock.map((friend, i) => (
-            <View
-              key={i}
+            <TouchableOpacity
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                width: '100%',
-                justifyContent: 'space-between',
-                marginBottom: 16,
+                backgroundColor: '#F2F5FA',
+                flex: 1,
+                paddingVertical: 8,
+                paddingHorizontal: 12,
+                justifyContent: 'center',
+                borderColor: '#F2F5FA',
+                borderRadius: 12,
+                marginRight: 8,
               }}
+              onPress={showSearchFriend}
             >
+              <Text style={{ fontSize: 12, color: 'grey' }}>
+                Search friend...
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {friendList ? (
+            friendList.map((friend, i) => (
               <View
+                key={i}
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
+                  width: '100%',
+                  justifyContent: 'space-between',
+                  marginBottom: 16,
                 }}
               >
-                <Avatar
-                  rounded
-                  source={getAvatarSource(friend.avatar)}
-                  size="small"
-                  containerStyle={{
-                    marginRight: 8,
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
                   }}
-                />
-
-                <View>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 'bold',
-                      marginBottom: 5,
+                >
+                  <Avatar
+                    rounded
+                    source={getAvatarSource(friend.avatar)}
+                    size="small"
+                    containerStyle={{
+                      marginRight: 8,
                     }}
-                    numberOfLines={1}
-                  >
-                    {friend.name}
-                  </Text>
-                  <Text style={{ fontSize: 12 }}>
-                    Level {Math.floor(friend.currentExp / 1000) + 1}
-                  </Text>
-                </View>
-              </View>
+                  />
 
-              <TouchableOpacity>
-                <MaterialCommunityIcons
-                  name="account-remove"
-                  color={COLORS.PASTEL_SALMON}
-                  onPress={() => {}}
-                  size={28}
-                />
-              </TouchableOpacity>
-            </View>
-          ))
-        ) : (
-          <NoFriend />
-        )}
-      </ScrollView>
+                  <View>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontWeight: 'bold',
+                        marginBottom: 5,
+                      }}
+                      numberOfLines={1}
+                    >
+                      {friend.name}
+                    </Text>
+                    <Text style={{ fontSize: 12 }}>
+                      Level {Math.floor(friend.currentExp / 1000) + 1}
+                    </Text>
+                  </View>
+                </View>
+
+                <TouchableOpacity>
+                  <MaterialCommunityIcons
+                    name="account-remove"
+                    color={COLORS.PASTEL_SALMON}
+                    onPress={() => {}}
+                    size={28}
+                  />
+                </TouchableOpacity>
+              </View>
+            ))
+          ) : (
+            <NoFriend />
+          )}
+        </ScrollView>
+      </Fetcher>
     );
   };
 

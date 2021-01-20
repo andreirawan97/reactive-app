@@ -54,24 +54,24 @@ export type Section = {
 type Journey = Array<Section>;
 
 export const journey: Journey = [
-  {
-    name: 'Introduction',
-    stages: [
-      {
-        type: 'tutorial',
-        id: 'tutorialJavascript',
-        icon: (iconProps) => (
-          <Image
-            source={JavascriptIcon}
-            style={{ width: 45, height: 45 }}
-            {...iconProps}
-          />
-        ),
-        name: 'JavaScript',
-        description: 'Learn the basics of JavaScript!',
-      },
-    ],
-  },
+  // {
+  //   name: 'Introduction',
+  //   stages: [
+  //     {
+  //       type: 'tutorial',
+  //       id: 'tutorialJavascript',
+  //       icon: (iconProps) => (
+  //         <Image
+  //           source={JavascriptIcon}
+  //           style={{ width: 45, height: 45 }}
+  //           {...iconProps}
+  //         />
+  //       ),
+  //       name: 'JavaScript',
+  //       description: 'Learn the basics of JavaScript!',
+  //     },
+  //   ],
+  // },
   {
     name: "Beginner's Guide",
     stages: [

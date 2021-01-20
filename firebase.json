@@ -8,16 +8,16 @@
   },
   "emulators": {
     "functions": {
-      "port": 5005
+      "port": 5006
     },
     "ui": {
       "enabled": true
     },
     "firestore": {
-      "port": 8085
+      "port": 8086
     },
     "database": {
-      "port": 9005
+      "port": 9006
     }
   },
   "database": {
