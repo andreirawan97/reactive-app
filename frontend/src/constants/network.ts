@@ -19,5 +19,8 @@ export const ENDPOINT = {
   UPDATE_USER_PROFILE: 'updateUserProfile',
   GET_CUSTOMIZATION_ITEM: 'getCustomizationItem',
   GET_GLOBAL_LEADERBOARD: 'getGlobalLeaderboard',
+  GET_FRIENDS_LEADERBOARD: 'getFriendsLeaderboard',
   GET_USER_FRIENDS: 'getUserFriends',
+  ADD_FRIEND: 'addFriend',
+  DELETE_FRIEND: 'deleteFriend',
 };

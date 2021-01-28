@@ -606,8 +606,6 @@ export const getGlobalLeaderboard = functions.https.onRequest(
       globalLeaderboardData.push(item.data());
     });
 
-    console.log(globalLeaderboardData);
-
     res.set({ "Access-Control-Allow-Origin": "*" });
     res.send({
       success: true,
@@ -617,10 +615,69 @@ export const getGlobalLeaderboard = functions.https.onRequest(
   }
 );
 
+export const getFriendsLeaderboard = functions.https.onRequest(
+  async (req, res) => {
+    let { token } = JSON.parse(req.body);
+    let username = jwt.verify(token, SECRET_KEY) as string;
+
+    const userSnapshot = await firestore
+      .collection(COLLECTION_NAME.USERS)
+      .doc(username)
+      .get();
+
+    const userData = userSnapshot.data();
+
+    const friendsSnapshot = await firestore
+      .collection(COLLECTION_NAME.FRIENDS)
+      .doc(username)
+      .get();
+
+    const friendsData = friendsSnapshot.data();
+
+    if (userData && friendsData) {
+      let promises: Array<Promise<unknown>> = [];
+
+      let friendList: Array<any> = [userData];
+
+      friendsData.friendList.forEach((friendUsername: string) => {
+        promises.push(
+          firestore
+            .collection(COLLECTION_NAME.USERS)
+            .doc(friendUsername)
+            .get()
+            .then((data) => {
+              friendList.push(data.data());
+            })
+        );
+      });
+
+      Promise.all(promises).then(() => {
+        friendList.sort((friend1, friend2) => {
+          return friend2.currentExp - friend1.currentExp;
+        });
+
+        res.set({ "Access-Control-Allow-Origin": "*" });
+        res.send({
+          success: true,
+          message: "",
+          token: jwt.sign({ friendList }, SECRET_KEY),
+        });
+      });
+    } else {
+      res.set({ "Access-Control-Allow-Origin": "*" });
+      res.send({
+        success: false,
+        message: "You have no friend!",
+        token: "",
+      });
+    }
+  }
+);
+
 export const getUserFriends = functions.https.onRequest(async (req, res) => {
   let { token } = JSON.parse(req.body);
   let username = jwt.verify(token, SECRET_KEY) as string;
-  console.log(jwt.verify(token, SECRET_KEY));
+
   const friendsSnapshot = await firestore
     .collection(COLLECTION_NAME.FRIENDS)
     .doc(username)
@@ -677,34 +734,129 @@ export const addFriend = functions.https.onRequest(async (req, res) => {
 
   const friendData = friendSnapshot.data();
 
-  if (friendData) {
-    const friendsDataSnapshot = await firestore
-      .collection(COLLECTION_NAME.FRIENDS)
-      .doc(username)
-      .get();
-
-    const friendsData = friendsDataSnapshot.data();
-    if (friendsData) {
-      friendsData.friendList.push(friendUsername);
-
-      await firestore
+  if (username !== friendUsername) {
+    if (friendData) {
+      const friendsDataSnapshot = await firestore
         .collection(COLLECTION_NAME.FRIENDS)
         .doc(username)
-        .set(friendsData);
+        .get();
 
+      const friendsData = friendsDataSnapshot.data() as {
+        friendList: Array<string>;
+      };
+
+      if (friendsData) {
+        if (!friendsData.friendList.includes(friendUsername)) {
+          const friendFriendsDataSnapshot = await firestore
+            .collection(COLLECTION_NAME.FRIENDS)
+            .doc(friendUsername)
+            .get();
+
+          const friendFriendsData = friendFriendsDataSnapshot.data() as {
+            friendList: Array<string>;
+          };
+
+          friendFriendsData.friendList.push(username);
+
+          friendsData.friendList.push(friendUsername);
+
+          await firestore
+            .collection(COLLECTION_NAME.FRIENDS)
+            .doc(username)
+            .set(friendsData);
+
+          await firestore
+            .collection(COLLECTION_NAME.FRIENDS)
+            .doc(friendUsername)
+            .set(friendFriendsData);
+
+          res.set({ "Access-Control-Allow-Origin": "*" });
+          res.send({
+            success: true,
+            message: "Friend's added successfully.",
+            token: jwt.sign(friendsData, SECRET_KEY),
+          });
+        } else {
+          res.set({ "Access-Control-Allow-Origin": "*" });
+          res.send({
+            success: false,
+            message: "Your already add this friend.",
+            token: "",
+          });
+        }
+      } else {
+        res.set({ "Access-Control-Allow-Origin": "*" });
+        res.send({
+          success: false,
+          message: "Error occured",
+          token: "",
+        });
+      }
+    } else {
       res.set({ "Access-Control-Allow-Origin": "*" });
       res.send({
-        success: true,
-        message: "Friend's added successfully!",
-        token: jwt.sign(friendsData, SECRET_KEY),
+        success: false,
+        message: "Your friend's username is not found.",
+        token: "",
       });
     }
   } else {
     res.set({ "Access-Control-Allow-Origin": "*" });
     res.send({
       success: false,
-      message: "Your username is not found!",
+      message: "Your cannot add yourself. Lol.",
       token: "",
     });
   }
+});
+
+export const deleteFriend = functions.https.onRequest(async (req, res) => {
+  let { token } = JSON.parse(req.body);
+  let { username, friendUsername } = jwt.verify(token, SECRET_KEY) as {
+    username: string;
+    friendUsername: string;
+  };
+
+  const friendsDataSnapshot = await firestore
+    .collection(COLLECTION_NAME.FRIENDS)
+    .doc(username)
+    .get();
+
+  const friendFriendsDataSnapshot = await firestore
+    .collection(COLLECTION_NAME.FRIENDS)
+    .doc(friendUsername)
+    .get();
+
+  const friendsData = friendsDataSnapshot.data() as {
+    friendList: Array<string>;
+  };
+
+  const friendFriendsData = friendFriendsDataSnapshot.data() as {
+    friendList: Array<string>;
+  };
+
+  const newFriendsData = friendsData.friendList.filter(
+    (friend) => friend !== friendUsername
+  );
+
+  const newFriendFriendsData = friendFriendsData.friendList.filter(
+    (friend) => friend !== username
+  );
+
+  await firestore
+    .collection(COLLECTION_NAME.FRIENDS)
+    .doc(username)
+    .set({ friendList: newFriendsData });
+
+  await firestore
+    .collection(COLLECTION_NAME.FRIENDS)
+    .doc(friendUsername)
+    .set({ friendList: newFriendFriendsData });
+
+  res.set({ "Access-Control-Allow-Origin": "*" });
+  res.send({
+    success: true,
+    message: "Removed friend success.",
+    token: "",
+  });
 });

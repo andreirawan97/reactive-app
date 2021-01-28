@@ -14,22 +14,26 @@ import { Card } from '../../../components';
 import { Button, Fetcher, Loading, TextInput } from '../../../core-ui';
 import { getAchievement } from '../../../helpers/achievement';
 import { COLORS } from '../../../constants/styles';
-import { Friend, friendListMock } from '../../../fixtures/friend';
+import { Friend } from '../../../fixtures/friend';
 import { NavigationScreenProps } from '../../../types/navigation';
 import { getFromStorage } from '../../../helpers/storage';
 import { LOCALSTORAGE_KEYS } from '../../../constants/keys';
 import { FIREBASE_URL, ENDPOINT } from '../../../constants/network';
-import { decodeToken } from '../../../helpers/token';
+import { decodeToken, encodeToken } from '../../../helpers/token';
 import { Response } from '../../../types/firestore';
 import { UserAchievements } from '../../../fixtures/achievements';
 import { showModal } from '../../../core-ui/ModalProvider';
 import { achievements } from '../../../data/achievements';
 import { getAvatarSource } from '../../../helpers/avatar';
+import homebrewFetch from '../../../helpers/homebrewFetch';
+import { UserData } from '../../../fixtures/user';
 
 const tokenReqBody = { token: getFromStorage(LOCALSTORAGE_KEYS.TOKEN) };
 
 const getUserAchievementsURL = `${FIREBASE_URL}${ENDPOINT.GET_USER_ACHIEVEMENTS}`;
 const getFriendsURL = `${FIREBASE_URL}${ENDPOINT.GET_USER_FRIENDS}`;
+const addFriendURL = `${FIREBASE_URL}${ENDPOINT.ADD_FRIEND}`;
+const deleteFriendURL = `${FIREBASE_URL}${ENDPOINT.DELETE_FRIEND}`;
 
 type Props = {} & NavigationScreenProps;
 
@@ -41,7 +45,8 @@ export default function HomeScene(props: Props) {
       perspective: false,
     },
   });
-  const [friendList, setFriendList] = useState<Array<Friend>>();
+  const [friendList, setFriendList] = useState<Array<Friend>>([]);
+  const [friendUsername, setFriendUsername] = useState('');
 
   let onSuccessGetUserAchievements = useCallback((response: Response) => {
     let { token } = response;
@@ -54,7 +59,6 @@ export default function HomeScene(props: Props) {
     let data = decodeToken(token) as {
       friendList: Array<Friend>;
     };
-    console.log(data);
     if (data.friendList.length > 0) {
       setFriendList(data.friendList);
     }
@@ -108,41 +112,7 @@ export default function HomeScene(props: Props) {
     );
   };
 
-  let SearchFriendModalContent = () => {
-    return (
-      <View
-        style={{ flexDirection: 'row', marginRight: 12, alignItems: 'center' }}
-      >
-        <View
-          style={{
-            backgroundColor: '#F2F5FA',
-            flex: 1,
-            paddingVertical: 8,
-            paddingHorizontal: 12,
-            justifyContent: 'center',
-            borderColor: '#F2F5FA',
-            borderRadius: 12,
-            marginRight: 12,
-          }}
-        >
-          <TextInput
-            style={{ fontSize: 12, color: 'grey' }}
-            placeholder="Input friend username..."
-          />
-        </View>
-
-        <TouchableOpacity>
-          <Text
-            style={{ color: COLORS.PRIMARY, fontSize: 20, fontWeight: '600' }}
-          >
-            Add Friend
-          </Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
-  const ProcessingModalContent = () => (
+  const LoadingAddFriendModalContent = () => (
     <View
       style={{
         flex: 1,
@@ -154,7 +124,7 @@ export default function HomeScene(props: Props) {
       <View style={{ marginBottom: 26 }}>
         <Loading />
       </View>
-      <Text style={{ fontSize: 16 }}>Processing Transaction...</Text>
+      <Text style={{ fontSize: 16 }}>Adding Friend...</Text>
     </View>
   );
 
@@ -168,17 +138,58 @@ export default function HomeScene(props: Props) {
     });
   };
 
-  let showSearchFriend = () => {
+  let showAddFriendResult = (message: string, token: string) => {
     showModal({
-      content: SearchFriendModalContent,
-      title: 'Search Friend',
+      content: () => (
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+          <Text>{message}</Text>
+        </View>
+      ),
       containerStyle: {
         width: '60%',
       },
       contentContainerStyle: {
         paddingVertical: 20,
       },
+      onCloseModal: () => {
+        if (token) {
+          window.location.reload();
+        }
+      },
     });
+  };
+
+  let showLoadingAddFriend = () => {
+    showModal({
+      showCloseButton: false,
+      dismissable: false,
+      content: LoadingAddFriendModalContent,
+    });
+  };
+
+  let addFriend = () => {
+    showLoadingAddFriend();
+
+    if (friendUsername) {
+      const username = decodeToken(
+        getFromStorage(LOCALSTORAGE_KEYS.TOKEN) || '',
+      );
+      let rawRequestBody = {
+        username,
+        friendUsername,
+      };
+      let requestBody = {
+        token: encodeToken(rawRequestBody),
+      };
+
+      homebrewFetch('POST', addFriendURL, requestBody)
+        .then((response) => response.json())
+        .then((data: Response) => {
+          showAddFriendResult(data.message, data.token);
+        });
+    } else {
+      showAddFriendResult("Friend's username cannot be empty!", '');
+    }
   };
 
   let NoAchievement = () => (
@@ -300,21 +311,28 @@ export default function HomeScene(props: Props) {
               marginBottom: 12,
             }}
           >
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#F2F5FA',
+            <TextInput
+              style={{ fontSize: 14 }}
+              placeholder="Input friend username..."
+              onChangeText={setFriendUsername}
+              value={friendUsername}
+              containerStyle={{
+                paddingVertical: 4,
+                paddingHorizontal: 4,
+                borderRadius: 8,
                 flex: 1,
-                paddingVertical: 8,
-                paddingHorizontal: 12,
-                justifyContent: 'center',
-                borderColor: '#F2F5FA',
-                borderRadius: 12,
-                marginRight: 8,
               }}
-              onPress={showSearchFriend}
-            >
-              <Text style={{ fontSize: 12, color: 'grey' }}>
-                Search friend...
+            />
+
+            <TouchableOpacity style={{ marginLeft: 8 }} onPress={addFriend}>
+              <Text
+                style={{
+                  color: COLORS.PRIMARY,
+                  fontWeight: 'bold',
+                  fontSize: 14,
+                }}
+              >
+                Search
               </Text>
             </TouchableOpacity>
           </View>
@@ -367,7 +385,27 @@ export default function HomeScene(props: Props) {
                   <MaterialCommunityIcons
                     name="account-remove"
                     color={COLORS.PASTEL_SALMON}
-                    onPress={() => {}}
+                    onPress={() => {
+                      const newFriendList = friendList.filter(
+                        (friend_) => friend.username !== friend_.username,
+                      );
+                      setFriendList(newFriendList);
+
+                      const username = decodeToken(
+                        getFromStorage(LOCALSTORAGE_KEYS.TOKEN) || '',
+                      );
+                      let rawRequestBody = {
+                        username,
+                        friendUsername: friend.username,
+                      };
+                      let requestBody = {
+                        token: encodeToken(rawRequestBody),
+                      };
+
+                      homebrewFetch('POST', deleteFriendURL, requestBody)
+                        .then((response) => response.json())
+                        .then((data: Response) => {});
+                    }}
                     size={28}
                   />
                 </TouchableOpacity>
