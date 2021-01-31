@@ -68,7 +68,21 @@ export default function EditProfileScene(props: Props) {
     showModal({
       showCloseButton: false,
       dismissable: false,
-      content: () => <Loading />,
+      content: () => (
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingVertical: 60,
+          }}
+        >
+          <View style={{ marginBottom: 26 }}>
+            <Loading />
+          </View>
+          <Text style={{ fontSize: 16 }}>Saving Changes...</Text>
+        </View>
+      ),
     });
 
     let rawRequestBody = {

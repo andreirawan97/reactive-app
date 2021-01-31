@@ -1014,6 +1014,17 @@ let javascriptSVG = ({ width, height }: SVGProps) => (
   </svg>
 );
 
+let potraitSVG = ({ width, height }: SVGProps) => (
+  <svg width={width} height={height} viewBox="0 0 468.293 468.293">
+    <path fill="#64798a" d="M0 15.822h468.293v436.649H0z" />
+    <path fill="#e1e6e9" d="M50.032 62.495H418.26v343.352H50.032z" />
+    <circle cx={310.634} cy={133.407} r={64.069} fill="#fcd462" />
+    <circle cx={310.634} cy={133.407} r={50.388} fill="#f6c358" />
+    <path fill="#3ea69b" d="M171.945 405.846l126.89-181.994 116.938 181.994z" />
+    <path fill="#44c4a1" d="M50.031 405.846l126.89-181.994 116.938 181.994z" />
+  </svg>
+);
+
 const SVG = {
   homeStartSVG,
   achievementSVG,
@@ -1026,6 +1037,7 @@ const SVG = {
   perspectiveSVG,
   greenCheckmarkSVG,
   javascriptSVG,
+  potraitSVG,
 };
 
 export default SVG;

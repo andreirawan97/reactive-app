@@ -651,18 +651,27 @@ export const getFriendsLeaderboard = functions.https.onRequest(
         );
       });
 
-      Promise.all(promises).then(() => {
-        friendList.sort((friend1, friend2) => {
-          return friend2.currentExp - friend1.currentExp;
-        });
+      Promise.all(promises)
+        .then(() => {
+          friendList.sort((friend1, friend2) => {
+            return friend2.currentExp - friend1.currentExp;
+          });
 
-        res.set({ "Access-Control-Allow-Origin": "*" });
-        res.send({
-          success: true,
-          message: "",
-          token: jwt.sign({ friendList }, SECRET_KEY),
+          res.set({ "Access-Control-Allow-Origin": "*" });
+          res.send({
+            success: true,
+            message: "",
+            token: jwt.sign({ friendList }, SECRET_KEY),
+          });
+        })
+        .catch(() => {
+          res.set({ "Access-Control-Allow-Origin": "*" });
+          res.send({
+            success: false,
+            message: "Error in promise",
+            token: "",
+          });
         });
-      });
     } else {
       res.set({ "Access-Control-Allow-Origin": "*" });
       res.send({
@@ -702,14 +711,23 @@ export const getUserFriends = functions.https.onRequest(async (req, res) => {
       );
     });
 
-    Promise.all(promises).then(() => {
-      res.set({ "Access-Control-Allow-Origin": "*" });
-      res.send({
-        success: true,
-        message: "",
-        token: jwt.sign({ friendList }, SECRET_KEY),
+    Promise.all(promises)
+      .then(() => {
+        res.set({ "Access-Control-Allow-Origin": "*" });
+        res.send({
+          success: true,
+          message: "",
+          token: jwt.sign({ friendList }, SECRET_KEY),
+        });
+      })
+      .catch(() => {
+        res.set({ "Access-Control-Allow-Origin": "*" });
+        res.send({
+          success: false,
+          message: "Error in promise",
+          token: "",
+        });
       });
-    });
   } else {
     res.set({ "Access-Control-Allow-Origin": "*" });
     res.send({

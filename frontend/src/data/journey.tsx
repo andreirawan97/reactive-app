@@ -1,14 +1,19 @@
 import React, { ReactElement } from 'react';
-import { Image, ImageProps } from 'react-native';
+import { Image, ImageProps, View } from 'react-native';
 import { JavascriptIcon } from '../../assets';
 
 import SVG from '../../assets/svg';
 
 import { helloWorldLevels } from './levels/helloWorld';
 import { perspectiveLevels } from './levels/perspective';
+import { potraitLevels } from './levels/potrait';
 import { Reward } from './rewards';
 
-export type StageId = 'helloWorld' | 'perspective' | 'tutorialJavascript';
+export type StageId =
+  | 'tutorialJavascript'
+  | 'helloWorld'
+  | 'perspective'
+  | 'potrait';
 
 export type Code = {
   tabCount: number;
@@ -93,6 +98,25 @@ export const journey: Journey = [
         name: 'Perspective',
         description: 'Learn how to build a layout with View component.',
         levels: perspectiveLevels,
+      },
+      {
+        type: 'challenge',
+        id: 'potrait',
+        icon: () => (
+          <View
+            style={{
+              width: 50,
+              height: 50,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            {React.createElement(SVG.potraitSVG, { width: 35, height: 35 })}
+          </View>
+        ),
+        name: 'Potrait',
+        description: 'Learn how to make an image in React Native!',
+        levels: potraitLevels,
       },
     ],
   },

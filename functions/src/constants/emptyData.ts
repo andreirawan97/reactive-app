@@ -32,6 +32,26 @@ export const emptyJourneyData = {
       highScore: 0,
       isFirstTime: true,
     },
+    {
+      unlocked: false,
+      levelNo: 3,
+      highScore: 0,
+      isFirstTime: true,
+    },
+  ],
+  potrait: [
+    {
+      levelNo: 1,
+      unlocked: true,
+      highScore: 0,
+      isFirstTime: true,
+    },
+    {
+      levelNo: 2,
+      unlocked: false,
+      highScore: 0,
+      isFirstTime: true,
+    },
   ],
 };
 

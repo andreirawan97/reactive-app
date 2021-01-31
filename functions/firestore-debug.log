@@ -5,27 +5,19 @@ If you are using a library that supports the FIRESTORE_EMULATOR_HOST environment
 
 Dev App Server is now running.
 
-Jan 28, 2021 4:19:41 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Jan 31, 2021 3:29:09 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected HTTP/2 connection.
-Jan 28, 2021 4:19:43 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Jan 31, 2021 3:29:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected HTTP/2 connection.
-Jan 28, 2021 4:19:44 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Jan 31, 2021 3:29:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected HTTP/2 connection.
-Jan 28, 2021 4:19:44 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Jan 31, 2021 3:29:14 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected HTTP/2 connection.
-Jan 28, 2021 4:19:52 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Jan 31, 2021 3:29:20 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected HTTP/2 connection.
-Jan 28, 2021 4:20:21 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Jan 31, 2021 3:29:26 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected HTTP/2 connection.
-Jan 28, 2021 4:20:25 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+Jan 31, 2021 3:29:28 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
 INFO: Detected HTTP/2 connection.
-Jan 28, 2021 4:21:14 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected HTTP/2 connection.
-Jan 28, 2021 4:21:24 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected HTTP/2 connection.
-Jan 28, 2021 4:21:28 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected HTTP/2 connection.
-Jan 28, 2021 4:21:30 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected HTTP/2 connection.
-Jan 28, 2021 4:21:33 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected HTTP/2 connection.
+*** shutting down gRPC server since JVM is shutting down
+*** server shut down

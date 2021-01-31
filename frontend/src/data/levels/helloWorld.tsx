@@ -31,8 +31,8 @@ export const helloWorldLevels: Array<Level> = [
     content: [
       'Text is one of the most important element in mobile app. For example the one that you are looking at. Yes this one.',
       "In React Native, it's quite easy to write a simple bug-free Hello World! You Just need to add Text element and text that you want to show inside it.",
-      'For example <Text>Text is one of the most important element...</Text>',
-      `Now, write your own text to show "Hello World!". Without the quotation mark of course.`,
+      'For example "<Text>Text is one of the most important element...</Text>"',
+      `Now, write your own text to show 'Hello World!'. Without the single quote mark of course.`,
     ],
     correctAnswers: ['<Text>Hello World!</Text>'],
     codeContent: [
@@ -89,7 +89,7 @@ export const helloWorldLevels: Array<Level> = [
     difficulty: 1,
     levelNo: 2,
     content: [
-      `Make another Text that says "I Am Groot". Without the quotation mark of course.`,
+      `Make another Text that says 'I Am Groot'. Without the quotation mark of course.`,
     ],
     correctAnswers: ['<Text>I Am Groot</Text>'],
     codeContent: [
@@ -149,11 +149,15 @@ export const helloWorldLevels: Array<Level> = [
       `In React Native, you style your application using JavaScript.`,
       `Almost all React Native component have a prop named "style"`,
       `The style names and values usually match how CSS works on the web, except names are written using camel casing, e.g. backgroundColor rather than background-color`,
-      `Example: <Text style={{color: 'blue'}}>This text will be blue</Text>`,
-      `For this level, please make a text that says "I Am Red".`,
-      `Important note: Please make the add a single space before the style value and use '' not "". color:"red" and color: 'red' might produce the same output but we judge your result by the text, not by output.`,
+      `Example: "<Text style={{color: 'blue'}}>This text will be blue</Text>"`,
+      `For this level, please make a text that says 'I Am Red'.`,
     ],
-    correctAnswers: [`<Text style={{color: 'red'}}>I Am Red</Text>`],
+    correctAnswers: [
+      `<Text style={{color: 'red'}}>I Am Red</Text>`,
+      `<Text style={{color: "red"}}>I Am Red</Text>`,
+      `<Text style={{color:'red'}}>I Am Red</Text>`,
+      `<Text style={{color:"red"}}>I Am Red</Text>`,
+    ],
     codeContent: [
       {
         code: `import React from 'react'`,

@@ -364,6 +364,7 @@ const styles = StyleSheet.create({
   levelContentText: {
     fontSize: FONT_SIZE.PARAGRAPH1,
     marginBottom: 20,
+    color: 'rgba(0,0,0,0.7)',
   },
   contentContainer: {
     flex: 1,
