@@ -13,8 +13,8 @@ import homebrewFetch from '../../helpers/homebrewFetch';
 
 export default function AuthScene() {
   const [isRequesting, setRequesting] = useState(false);
-  const [username, setUsername] = useState('andreirawan97');
-  const [password, setPassword] = useState('1234');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [errorMessageLogin, setErrorMessageLogin] = useState('');
   const [errorMessageSignup, setErrorMessageSignup] = useState('');
