@@ -25,7 +25,7 @@ export default function LevelButton(props: Props) {
   );
 
   return (
-    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ alignItems: 'center', justifyContent: 'center', zIndex: -1 }}>
       {isHovered && HighScoreTooltip}
       <TouchableOpacity
         ref={ref}
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     bottom: -20,
     right: -14,
     width: 160,
-    zIndex: 1,
+    zIndex: 2,
     borderRadius: 6,
   },
   highScoreText: {
