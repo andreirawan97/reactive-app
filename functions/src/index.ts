@@ -878,3 +878,60 @@ export const deleteFriend = functions.https.onRequest(async (req, res) => {
     token: "",
   });
 });
+
+export const ADMIN_UPDATE_JOURNEY_TO_LATEST = functions.https.onRequest(
+  async (req, res) => {
+    const promises: Array<Promise<unknown>> = [];
+    const journeyDocuments = await firestore
+      .collection(COLLECTION_NAME.JOURNEY)
+      .get();
+
+    let idUsers: Array<string> = [];
+    let journeyDataUsers: Array<
+      Record<
+        string,
+        Array<{
+          levelNo: number;
+          isFirstTime: boolean;
+          highScore: number;
+          unlocked: boolean;
+        }>
+      >
+    > = [];
+
+    journeyDocuments.forEach((result) => {
+      idUsers.push(result.id);
+      journeyDataUsers.push(result.data());
+    });
+
+    idUsers.forEach((id, i) => {
+      promises.push(
+        firestore
+          .collection(COLLECTION_NAME.USERS)
+          .doc(id)
+          .set({
+            ...emptyJourneyData,
+            ...journeyDataUsers[i],
+          })
+      );
+    });
+
+    Promise.all(promises)
+      .then(() => {
+        res.set({ "Access-Control-Allow-Origin": "*" });
+        res.send({
+          success: true,
+          message: "ADMIN FUNCTION RUN SUCCESSFULLY",
+          token: "",
+        });
+      })
+      .catch(() => {
+        res.set({ "Access-Control-Allow-Origin": "*" });
+        res.send({
+          success: false,
+          message: "Error in promise",
+          token: "",
+        });
+      });
+  }
+);

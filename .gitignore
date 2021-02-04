@@ -29,3 +29,7 @@ frontend/web-build/
 frontend/.DS_Store
 
 frontend/coverage
+
+functions/database-debug.log
+functions/firebase-debug.log
+functions/firestore-debug.log
