@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet, Text, Image } from 'react-native';
 
-import { Reward } from '../data/rewards';
+import { Reward, RewardId } from '../data/rewards';
 import { getItemDetail } from '../helpers/item';
 
 type Props = {
@@ -13,14 +13,16 @@ export default function RewardList(props: Props) {
 
   let RewardContent = ({ reward }: { reward: Reward }) => {
     let item = getItemDetail(reward);
+
     return (
       <View style={styles.rewardContentContainer}>
         <Image
           source={item?.source}
           style={{ width: 45, height: 45, resizeMode: 'contain' }}
         />
-        <Text style={styles.rewardContentTitle}>{item?.name}</Text>
-        <Text>{reward?.value}</Text>
+  
+        <Text style={styles.rewardContentTitle}>{reward.id === "avatar" ? "Avatar" : item?.name}</Text>
+        <Text>{reward.id==="avatar" ? item?.name : reward?.value}</Text>
       </View>
     );
   };

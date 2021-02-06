@@ -26,7 +26,7 @@ export default function LevelButton(props: Props) {
 
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center', zIndex: -1 }}>
-      {isHovered && HighScoreTooltip}
+      {/* {isHovered && HighScoreTooltip} */}
       <TouchableOpacity
         ref={ref}
         style={styles.levelSelector}

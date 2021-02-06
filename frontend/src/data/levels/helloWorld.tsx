@@ -17,14 +17,13 @@ export const helloWorldLevels: Array<Level> = [
         value: 200,
       },
     ],
-    // chanceRewards: [
-    //   {
-    //     id: 'avatar',
-    //     value: '',
-    //     chance: 0.1,
-    //   },
-    // ],
-    chanceRewards: [],
+    chanceRewards: [
+      {
+        id: 'avatar',
+        value: 'fallenCoder',
+        chance: 0.9,
+      },
+    ],
     timeLimit: 300000,
     difficulty: 1,
     levelNo: 1,

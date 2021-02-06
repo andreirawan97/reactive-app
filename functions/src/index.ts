@@ -308,12 +308,17 @@ export const updateJourneyProgress = functions.https.onRequest(
       .collection(COLLECTION_NAME.ACHIEVEMENTS)
       .doc(username)
       .get();
+    const avatarSnapshot = await firestore
+      .collection(COLLECTION_NAME.AVATARS)
+      .doc(username)
+      .get();
 
     const journeyData = journeySnapshot.data();
     const userData = userSnapshot.data();
     const achievementData = achievementSnapshot.data();
+    const avatarData = avatarSnapshot.data();
 
-    if (journeyData && userData && achievementData) {
+    if (journeyData && userData && achievementData && avatarData) {
       journeyData[id][levelNo - 1].highScore =
         score > journeyData[id][levelNo - 1].highScore
           ? score
@@ -330,7 +335,7 @@ export const updateJourneyProgress = functions.https.onRequest(
         achievementData.latestAchievementId = id;
       }
 
-      rewards.forEach((reward) => {
+      rewards.forEach((reward: { id: string; value: string }) => {
         switch (reward.id) {
           case "exp": {
             userData.currentExp += reward.value;
@@ -338,6 +343,10 @@ export const updateJourneyProgress = functions.https.onRequest(
           }
           case "currency": {
             userData.currency += reward.value;
+            break;
+          }
+          case "avatar": {
+            avatarData[reward.value] = true;
             break;
           }
           default: {
@@ -360,6 +369,11 @@ export const updateJourneyProgress = functions.https.onRequest(
         .collection(COLLECTION_NAME.ACHIEVEMENTS)
         .doc(username)
         .set(achievementData);
+
+      await firestore
+        .collection(COLLECTION_NAME.AVATARS)
+        .doc(username)
+        .set(avatarData);
 
       res.set({ "Access-Control-Allow-Origin": "*" });
       res.send({

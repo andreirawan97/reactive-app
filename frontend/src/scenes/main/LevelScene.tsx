@@ -171,7 +171,7 @@ export default function LevelScene(props: Props) {
         <Text style={styles.modalCompletionTimeText}>
           Completion time: {msToCompletionTime(currentTime, timeLimit)}
         </Text>
-        <Text style={styles.modalScoreText}>Score: {finalScore}</Text>
+        {/* <Text style={styles.modalScoreText}>Score: {finalScore}</Text> */}
 
         <RewardList rewards={finalRewards} />
 

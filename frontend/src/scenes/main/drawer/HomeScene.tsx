@@ -26,7 +26,6 @@ import { showModal } from '../../../core-ui/ModalProvider';
 import { achievements } from '../../../data/achievements';
 import { getAvatarSource } from '../../../helpers/avatar';
 import homebrewFetch from '../../../helpers/homebrewFetch';
-import { UserData } from '../../../fixtures/user';
 
 const tokenReqBody = { token: getFromStorage(LOCALSTORAGE_KEYS.TOKEN) };
 
