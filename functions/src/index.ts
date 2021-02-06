@@ -918,10 +918,13 @@ export const ADMIN_UPDATE_JOURNEY_TO_LATEST = functions.https.onRequest(
       journeyDataUsers.push(result.data());
     });
 
+    console.log(`Journey template: ${emptyJourneyData}`);
+
     idUsers.forEach((id, i) => {
+      console.log(`Updating journey for id ${id}`);
       promises.push(
         firestore
-          .collection(COLLECTION_NAME.USERS)
+          .collection(COLLECTION_NAME.JOURNEY)
           .doc(id)
           .set({
             ...emptyJourneyData,
