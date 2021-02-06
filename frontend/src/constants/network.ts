@@ -4,7 +4,7 @@ export const LOCAL_URL =
 export const PRODUCTION_URL =
   'https://us-central1-reactive-app-aa8ad.cloudfunctions.net/';
 
-export const FIREBASE_URL = LOCAL_URL;
+export const FIREBASE_URL = PRODUCTION_URL;
 
 export const ENDPOINT = {
   LOGIN: 'login',
