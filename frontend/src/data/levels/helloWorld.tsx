@@ -21,7 +21,7 @@ export const helloWorldLevels: Array<Level> = [
       {
         id: 'avatar',
         value: 'fallenCoder',
-        chance: 0.9,
+        chance: 0.3,
       },
     ],
     timeLimit: 300000,
@@ -173,6 +173,83 @@ export const helloWorldLevels: Array<Level> = [
       {
         code: `export default function App() {`,
         tabCount: 0,
+      },
+      {
+        code: `return (`,
+        tabCount: 1,
+      },
+      {
+        code: `%`,
+        tabCount: 2,
+      },
+      {
+        code: `)`,
+        tabCount: 1,
+      },
+      {
+        code: `}`,
+        tabCount: 0,
+      },
+    ],
+    expectedOutput: () => <Text style={{ color: 'red' }}>I Am Red</Text>,
+  },
+  {
+    type: 'fillCode',
+    stageName: 'Hello World',
+    firstTimeRewards: [
+      {
+        id: 'currency',
+        value: 200,
+      },
+      {
+        id: 'exp',
+        value: 200,
+      },
+    ],
+    chanceRewards: [],
+    timeLimit: 300000,
+    difficulty: 1,
+    levelNo: 4,
+    content: [
+      `You can also print value from a variable.`,
+      `To do this, you need to wrap the variable name with curly bracket. For example "<Text>{variableName}</Text>`,
+      `For this level, you need to show the answer of a basic math operation.`,
+    ],
+    correctAnswers: [
+      `<Text>{answer}</Text>`,
+    ],
+    codeContent: [
+      {
+        code: `import React from 'react'`,
+        tabCount: 0,
+      },
+      {
+        code: `import { Text } from 'react-native'`,
+        tabCount: 0,
+      },
+      {
+        code: ``,
+        tabCount: 0,
+      },
+      {
+        code: `export default function App() {`,
+        tabCount: 0,
+      },
+      {
+        code: `const phi = 3.14;`,
+        tabCount: 1,
+      },
+      {
+        code: `const r = 3;`,
+        tabCount: 1,
+      },
+      {
+        code: `const answer = phi * r * r;`,
+        tabCount: 1,
+      },
+      {
+        code: ``,
+        tabCount: 1,
       },
       {
         code: `return (`,

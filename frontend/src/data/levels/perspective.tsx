@@ -93,6 +93,7 @@ export const perspectiveLevels: Array<Level> = [
     difficulty: 1,
     levelNo: 2,
     content: [
+      `You can pass style property to configure the style of the View component.`,
       `Now, you need to make a red View that fill the screen.`,
       `Hint: It's something like "<View style={{flex: 1, backgroundColor: 'green'}} />"`,
     ],

@@ -17,7 +17,13 @@ export const potraitLevels: Array<Level> = [
         value: 200,
       },
     ],
-    chanceRewards: [],
+    chanceRewards: [
+      {
+        id: 'avatar',
+        value: 'millionaire',
+        chance: 0.05,
+      },
+    ],
     timeLimit: 300000,
     levelNo: 1,
     content: [
