@@ -18,6 +18,12 @@ export const emptyJourneyData = {
       highScore: 0,
       isFirstTime: true,
     },
+    {
+      unlocked: false,
+      levelNo: 4,
+      highScore: 0,
+      isFirstTime: true,
+    },
   ],
   perspective: [
     {
@@ -35,12 +41,6 @@ export const emptyJourneyData = {
     {
       unlocked: false,
       levelNo: 3,
-      highScore: 0,
-      isFirstTime: true,
-    },
-    {
-      unlocked: false,
-      levelNo: 4,
       highScore: 0,
       isFirstTime: true,
     },
