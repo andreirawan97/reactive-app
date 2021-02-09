@@ -12,30 +12,62 @@ export type UserJourney = Record<StageId, Array<UserLevelData>>;
 export const dummyUserJourney: UserJourney = {
   helloWorld: [
     {
-      unlocked: true,
       levelNo: 1,
-      isFirstTime: true,
+      unlocked: true,
       highScore: 0,
+      isFirstTime: true,
     },
     {
       unlocked: false,
       levelNo: 2,
-      isFirstTime: true,
       highScore: 0,
+      isFirstTime: true,
     },
     {
       unlocked: false,
       levelNo: 3,
-      isFirstTime: true,
       highScore: 0,
+      isFirstTime: true,
+    },
+    {
+      unlocked: false,
+      levelNo: 4,
+      highScore: 0,
+      isFirstTime: true,
     },
   ],
   perspective: [
     {
-      unlocked: true,
       levelNo: 1,
-      isFirstTime: true,
+      unlocked: true,
       highScore: 0,
+      isFirstTime: true,
+    },
+    {
+      unlocked: false,
+      levelNo: 2,
+      highScore: 0,
+      isFirstTime: true,
+    },
+    {
+      unlocked: false,
+      levelNo: 3,
+      highScore: 0,
+      isFirstTime: true,
+    },
+  ],
+  potrait: [
+    {
+      levelNo: 1,
+      unlocked: true,
+      highScore: 0,
+      isFirstTime: true,
+    },
+    {
+      levelNo: 2,
+      unlocked: false,
+      highScore: 0,
+      isFirstTime: true,
     },
   ],
 };

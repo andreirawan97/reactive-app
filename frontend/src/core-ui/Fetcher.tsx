@@ -28,6 +28,8 @@ export default function Fetcher(props: Props) {
 
   useFocusEffect(
     useCallback(() => {
+      console.log(`URL:  ${URL}`);
+      
       try {
         homebrewFetch(method, URL, requestBody)
           .then((response) => response.json())
@@ -37,6 +39,7 @@ export default function Fetcher(props: Props) {
           });
       } catch (err) {
         onFailure && onFailure(err);
+        console.log(err);
       }
     }, [method, URL, requestBody, onSuccess, onFailure]),
   );

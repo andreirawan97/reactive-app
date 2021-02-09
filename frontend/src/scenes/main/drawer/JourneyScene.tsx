@@ -33,6 +33,7 @@ export default function JourneyScene(props: Props) {
   const [currentStage, setCurrentStage] = useState(journey[0].stages[0]);
 
   const onSuccessFetch = useCallback((response: Response) => {
+    console.log("Successfully Fetch Journey Data");
     let { token } = response;
     let data = decodeToken(token) as UserJourney;
     setUserJourney(data);
