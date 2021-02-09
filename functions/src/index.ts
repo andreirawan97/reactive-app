@@ -918,18 +918,31 @@ export const ADMIN_UPDATE_JOURNEY_TO_LATEST = functions.https.onRequest(
       journeyDataUsers.push(result.data());
     });
 
-    console.log("Journey template: " + emptyJourneyData);
-
     idUsers.forEach((id, i) => {
       console.log(`Updating journey for id ${id}`);
+      console.log(journeyDataUsers[i]);
+
+      let newJourneyData = {
+        ...journeyDataUsers[i],
+        ...emptyJourneyData,
+      };
+
+      Object.keys(journeyDataUsers[i]).forEach((levelId) => {
+        // @ts-ignore
+        emptyJourneyData[levelId].forEach((emptyLevelData) => {
+          // @ts-ignore
+          if (i >= newJourneyData[levelId].length) {
+            // @ts-ignore
+            newJourneyData[levelId].push(emptyLevelData);
+          }
+        });
+      });
+
       promises.push(
         firestore
           .collection(COLLECTION_NAME.JOURNEY)
           .doc(id)
-          .set({
-            ...emptyJourneyData,
-            ...journeyDataUsers[i],
-          })
+          .set(newJourneyData)
       );
     });
 
