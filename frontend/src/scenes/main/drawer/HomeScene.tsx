@@ -42,6 +42,10 @@ export default function HomeScene(props: Props) {
     data: {
       helloWorld: false, // Boolean for is the achievement unlocked. The default is false
       perspective: false,
+      potrait: false,
+      loadingComplete: false,
+      morningstar: false,
+      beffJezos: false,
     },
   });
   const [friendList, setFriendList] = useState<Array<Friend>>([]);
@@ -80,7 +84,7 @@ export default function HomeScene(props: Props) {
 
   let AchievementModalContent = () => {
     return (
-      <ScrollView contentContainerStyle={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         {achievements.map((achievement, i) => (
           <View
             key={i}
@@ -107,7 +111,7 @@ export default function HomeScene(props: Props) {
             )}
           </View>
         ))}
-      </ScrollView>
+      </View>
     );
   };
 

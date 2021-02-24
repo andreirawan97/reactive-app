@@ -36,6 +36,7 @@ export default function JourneyScene(props: Props) {
     console.log("Successfully Fetch Journey Data");
     let { token } = response;
     let data = decodeToken(token) as UserJourney;
+    console.log(data);
     setUserJourney(data);
   }, []);
 

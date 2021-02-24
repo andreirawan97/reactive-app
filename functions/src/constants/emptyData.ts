@@ -24,6 +24,12 @@ export const emptyJourneyData = {
       highScore: 0,
       isFirstTime: true,
     },
+    {
+      unlocked: false,
+      levelNo: 5,
+      highScore: 0,
+      isFirstTime: true,
+    },
   ],
   perspective: [
     {
@@ -59,6 +65,14 @@ export const emptyJourneyData = {
       isFirstTime: true,
     },
   ],
+  loading: [
+    {
+      levelNo: 1,
+      unlocked: true,
+      highScore: 0,
+      isFirstTime: true,
+    },
+  ],
 };
 
 export const emptyPhoneSkinsData = {
@@ -71,6 +85,10 @@ export const emptyAchievementData = {
   data: {
     helloWorld: false, // Boolean for is the achievement unlocked. The default is false
     perspective: false,
+    potrait: false,
+    loadingComplete: false,
+    morningstar: false,
+    beffJezos: false,
   },
 };
 

@@ -14,6 +14,7 @@ import {
   Text,
   ViewStyle,
   Animated,
+  ScrollView,
 } from 'react-native';
 import { EventEmitter } from 'fbemitter';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -130,7 +131,7 @@ export default function ModalProvider(props: Props) {
               />
             )}
           </View>
-          <View style={contentContainerStyle}>{content()}</View>
+          <ScrollView contentContainerStyle={contentContainerStyle}>{content()}</ScrollView>
         </Animated.View>
       </View>
     );

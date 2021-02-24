@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { Level } from '../journey';
 
@@ -21,7 +21,7 @@ export const helloWorldLevels: Array<Level> = [
       {
         id: 'avatar',
         value: 'fallenCoder',
-        chance: 0.3,
+        chance: 0.1,
       },
     ],
     timeLimit: 300000,
@@ -30,7 +30,7 @@ export const helloWorldLevels: Array<Level> = [
     content: [
       'Text is one of the most important element in mobile app. For example the one that you are looking at. Yes this one.',
       "In React Native, it's quite easy to write a simple bug-free Hello World! You Just need to add Text element and text that you want to show inside it.",
-      'For example "<Text>Text is one of the most important element...</Text>"',
+      'For example "<Text>The content of the Text</Text>"',
       `Now, write your own text to show 'Hello World!'. Without the single quote mark of course.`,
     ],
     correctAnswers: ['<Text>Hello World!</Text>'],
@@ -199,7 +199,7 @@ export const helloWorldLevels: Array<Level> = [
     firstTimeRewards: [
       {
         id: 'currency',
-        value: 200,
+        value: 100,
       },
       {
         id: 'exp',
@@ -268,6 +268,134 @@ export const helloWorldLevels: Array<Level> = [
         tabCount: 0,
       },
     ],
-    expectedOutput: () => <Text style={{ color: 'red' }}>I Am Red</Text>,
+    expectedOutput: () => <Text>28.259</Text>,
+  },
+  {
+    type: 'fillCode',
+    stageName: 'Hello World',
+    firstTimeRewards: [
+      {
+        id: 'currency',
+        value: 250,
+      },
+      {
+        id: 'exp',
+        value: 200,
+      },
+    ],
+    chanceRewards: [],
+    timeLimit: 400000,
+    difficulty: 1,
+    levelNo: 5,
+    content: [
+      `You can also replace the style object with a variable.`,
+      `This variable is created with StyleSheet class that provided by React Native.`,
+      `For this level, write code that produce the expected output.`,
+    ],
+    correctAnswers: [
+      `<Text style={styles.redText}>Red</Text>`,
+    ],
+    codeContent: [
+      {
+        code: `import React from 'react'`,
+        tabCount: 0,
+      },
+      {
+        code: `import { Text, StyleSheet } from 'react-native'`,
+        tabCount: 0,
+      },
+      {
+        code: ``,
+        tabCount: 0,
+      },
+      {
+        code: `export default function App() {`,
+        tabCount: 0,
+      },
+      {
+        code: `return (`,
+        tabCount: 1,
+      },
+      {
+        code: `<View style={styles.row}>`,
+        tabCount: 2,
+      },
+      {
+        code: `<Text style={styles.blueText}>Blue</Text>`,
+        tabCount: 3,
+      },
+      {
+        code: `%`,
+        tabCount: 3,
+      },
+      {
+        code: `</View>`,
+        tabCount: 2,
+      },
+      {
+        code: `)`,
+        tabCount: 1,
+      },
+      {
+        code: ``,
+        tabCount: 1,
+      },
+      {
+        code: `const styles = StyleSheet.create({`,
+        tabCount: 1,
+      },
+      {
+        code: `row: {`,
+        tabCount: 2,
+      },
+      {
+        code: `flexDirection: "row"`,
+        tabCount: 3,
+      },
+      {
+        code: `},`,
+        tabCount: 2,
+      },
+      {
+        code: `blueText: {`,
+        tabCount: 2,
+      },
+      {
+        code: `color: "blue"`,
+        tabCount: 3,
+      },
+      {
+        code: `marginRight: 8`,
+        tabCount: 3,
+      },
+      {
+        code: `},`,
+        tabCount: 2,
+      },
+      {
+        code: `redText: {`,
+        tabCount: 2,
+      },
+      {
+        code: `color: "red"`,
+        tabCount: 3,
+      },
+      {
+        code: `}`,
+        tabCount: 2,
+      },
+      {
+        code: `})`,
+        tabCount: 1,
+      },
+      {
+        code: `}`,
+        tabCount: 0,
+      },
+    ],
+    expectedOutput: () => <View style={{flexDirection: "row"}}>
+      <Text style={{color: 'blue', marginRight: 8}}>Blue</Text>
+      <Text style={{color: 'red'}}>Red</Text>
+    </View>,
   },
 ];

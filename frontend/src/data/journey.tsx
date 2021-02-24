@@ -1,10 +1,10 @@
 import React, { ReactElement } from 'react';
 import { Image, ImageProps, View } from 'react-native';
-import { JavascriptIcon } from '../../assets';
 
 import SVG from '../../assets/svg';
 
 import { helloWorldLevels } from './levels/helloWorld';
+import { loadingLevels } from './levels/loading';
 import { perspectiveLevels } from './levels/perspective';
 import { potraitLevels } from './levels/potrait';
 import { Reward } from './rewards';
@@ -13,7 +13,8 @@ export type StageId =
   | 'tutorialJavascript'
   | 'helloWorld'
   | 'perspective'
-  | 'potrait';
+  | 'potrait' 
+  | "loading";
 
 export type Code = {
   tabCount: number;
@@ -114,9 +115,28 @@ export const journey: Journey = [
             {React.createElement(SVG.potraitSVG, { width: 35, height: 35 })}
           </View>
         ),
-        name: 'Potrait',
+        name: 'Portrait',
         description: 'Learn how to make an image in React Native!',
         levels: potraitLevels,
+      },
+      {
+        type: 'challenge',
+        id: 'loading',
+        icon: () => (
+          <View
+            style={{
+              width: 50,
+              height: 50,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            {React.createElement(SVG.loadingSVG, { width: 35, height: 35 })}
+          </View>
+        ),
+        name: 'Loading',
+        description: `No, your internet connection is fine. Learn how to make a loading indicator.`,
+        levels: loadingLevels,
       },
     ],
   },

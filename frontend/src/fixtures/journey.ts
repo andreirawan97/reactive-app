@@ -35,6 +35,12 @@ export const dummyUserJourney: UserJourney = {
       highScore: 0,
       isFirstTime: true,
     },
+    {
+      unlocked: false,
+      levelNo: 5,
+      highScore: 0,
+      isFirstTime: true,
+    },
   ],
   perspective: [
     {
@@ -66,6 +72,14 @@ export const dummyUserJourney: UserJourney = {
     {
       levelNo: 2,
       unlocked: false,
+      highScore: 0,
+      isFirstTime: true,
+    },
+  ],
+  loading: [
+    {
+      levelNo: 1,
+      unlocked: true,
       highScore: 0,
       isFirstTime: true,
     },

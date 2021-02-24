@@ -347,6 +347,15 @@ export const updateJourneyProgress = functions.https.onRequest(
           }
           case "avatar": {
             avatarData[reward.value] = true;
+
+            if (reward.value === "fallenCoder") {
+              achievementData.data["morningstar"] = true;
+              achievementData.latestAchievementId = "morningstar";
+            }
+            if (reward.value === "millionaire") {
+              achievementData.data["beffJezos"] = true;
+              achievementData.latestAchievementId = "beffJezos";
+            }
             break;
           }
           default: {
