@@ -72,6 +72,12 @@ export const emptyJourneyData = {
       highScore: 0,
       isFirstTime: true,
     },
+    {
+      levelNo: 2,
+      unlocked: false,
+      highScore: 0,
+      isFirstTime: true,
+    },
   ],
 };
 

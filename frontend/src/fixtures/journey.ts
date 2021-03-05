@@ -83,5 +83,11 @@ export const dummyUserJourney: UserJourney = {
       highScore: 0,
       isFirstTime: true,
     },
+    {
+      levelNo: 2,
+      unlocked: false,
+      highScore: 0,
+      isFirstTime: true,
+    },
   ],
 };

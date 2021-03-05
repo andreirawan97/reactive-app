@@ -10,7 +10,7 @@ import { potraitLevels } from './levels/potrait';
 import { Reward } from './rewards';
 
 export type StageId =
-  | 'tutorialJavascript'
+  // | 'tutorialJavascript'
   | 'helloWorld'
   | 'perspective'
   | 'potrait' 

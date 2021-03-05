@@ -24,6 +24,7 @@ frontend/*.key
 frontend/*.mobileprovision
 frontend/*.orig.*
 frontend/web-build/
+frontend/.expo/packager-info.json
 
 # macOS
 frontend/.DS_Store
