@@ -10,7 +10,7 @@ export const helloWorldLevels: Array<Level> = [
     firstTimeRewards: [
       {
         id: 'currency',
-        value: 200,
+        value: 100,
       },
       {
         id: 'exp',
@@ -76,7 +76,7 @@ export const helloWorldLevels: Array<Level> = [
     firstTimeRewards: [
       {
         id: 'currency',
-        value: 200,
+        value: 100,
       },
       {
         id: 'exp',
@@ -84,7 +84,7 @@ export const helloWorldLevels: Array<Level> = [
       },
     ],
     chanceRewards: [],
-    timeLimit: 100000,
+    timeLimit: 300000,
     difficulty: 1,
     levelNo: 2,
     content: [
@@ -133,7 +133,7 @@ export const helloWorldLevels: Array<Level> = [
     firstTimeRewards: [
       {
         id: 'currency',
-        value: 200,
+        value: 150,
       },
       {
         id: 'exp',
@@ -141,7 +141,7 @@ export const helloWorldLevels: Array<Level> = [
       },
     ],
     chanceRewards: [],
-    timeLimit: 300000,
+    timeLimit: 250000,
     difficulty: 1,
     levelNo: 3,
     content: [
@@ -199,7 +199,7 @@ export const helloWorldLevels: Array<Level> = [
     firstTimeRewards: [
       {
         id: 'currency',
-        value: 100,
+        value: 150,
       },
       {
         id: 'exp',
@@ -207,7 +207,7 @@ export const helloWorldLevels: Array<Level> = [
       },
     ],
     chanceRewards: [],
-    timeLimit: 300000,
+    timeLimit: 250000,
     difficulty: 1,
     levelNo: 4,
     content: [
@@ -215,9 +215,7 @@ export const helloWorldLevels: Array<Level> = [
       `To do this, you need to wrap the variable name with curly bracket. For example "<Text>{variableName}</Text>`,
       `For this level, you need to show the answer of a basic math operation.`,
     ],
-    correctAnswers: [
-      `<Text>{answer}</Text>`,
-    ],
+    correctAnswers: [`<Text>{answer}</Text>`],
     codeContent: [
       {
         code: `import React from 'react'`,
@@ -276,15 +274,15 @@ export const helloWorldLevels: Array<Level> = [
     firstTimeRewards: [
       {
         id: 'currency',
-        value: 250,
+        value: 200,
       },
       {
         id: 'exp',
-        value: 200,
+        value: 250,
       },
     ],
     chanceRewards: [],
-    timeLimit: 400000,
+    timeLimit: 200000,
     difficulty: 1,
     levelNo: 5,
     content: [
@@ -292,9 +290,7 @@ export const helloWorldLevels: Array<Level> = [
       `This variable is created with StyleSheet class that provided by React Native.`,
       `For this level, write code that produce the expected output.`,
     ],
-    correctAnswers: [
-      `<Text style={styles.redText}>Red</Text>`,
-    ],
+    correctAnswers: [`<Text style={styles.redText}>Red</Text>`],
     codeContent: [
       {
         code: `import React from 'react'`,
@@ -393,9 +389,11 @@ export const helloWorldLevels: Array<Level> = [
         tabCount: 0,
       },
     ],
-    expectedOutput: () => <View style={{flexDirection: "row"}}>
-      <Text style={{color: 'blue', marginRight: 8}}>Blue</Text>
-      <Text style={{color: 'red'}}>Red</Text>
-    </View>,
+    expectedOutput: () => (
+      <View style={{ flexDirection: 'row' }}>
+        <Text style={{ color: 'blue', marginRight: 8 }}>Blue</Text>
+        <Text style={{ color: 'red' }}>Red</Text>
+      </View>
+    ),
   },
 ];

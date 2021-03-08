@@ -33,10 +33,8 @@ export default function JourneyScene(props: Props) {
   const [currentStage, setCurrentStage] = useState(journey[0].stages[0]);
 
   const onSuccessFetch = useCallback((response: Response) => {
-    console.log("Successfully Fetch Journey Data");
     let { token } = response;
     let data = decodeToken(token) as UserJourney;
-    console.log(data);
     setUserJourney(data);
   }, []);
 
@@ -230,6 +228,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
+    height: 90,
   },
   stageNameText: {
     fontSize: 22,

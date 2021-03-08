@@ -1,15 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Avatar } from 'react-native-elements';
-import { LOCALSTORAGE_KEYS } from '../../../constants/keys';
 
+import { LOCALSTORAGE_KEYS } from '../../../constants/keys';
 import { ENDPOINT, FIREBASE_URL } from '../../../constants/network';
 import { Fetcher } from '../../../core-ui';
 import Switcher, { Content } from '../../../core-ui/Switcher';
-import { AvatarId } from '../../../data/avatars';
 import { UserData } from '../../../fixtures/user';
 import { getAvatarSource } from '../../../helpers/avatar';
-import homebrewFetch from '../../../helpers/homebrewFetch';
 import { getFromStorage } from '../../../helpers/storage';
 import { decodeToken } from '../../../helpers/token';
 import { Response } from '../../../types/firestore';

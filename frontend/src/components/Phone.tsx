@@ -14,6 +14,7 @@ export default function Phone(props: Props) {
 
   let selectedPhoneSkin = phoneSkins[phoneSkinId];
 
+  let ExpectedOutput = expectedOutput;
   return (
     <View>
       <Image
@@ -35,7 +36,7 @@ export default function Phone(props: Props) {
           },
         ]}
       >
-        {expectedOutput()}
+        <ExpectedOutput />
       </View>
     </View>
   );

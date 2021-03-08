@@ -90,4 +90,56 @@ export const dummyUserJourney: UserJourney = {
       isFirstTime: true,
     },
   ],
+  typeIn: [
+    {
+      levelNo: 1,
+      unlocked: true,
+      highScore: 0,
+      isFirstTime: true,
+    },
+    {
+      levelNo: 2,
+      unlocked: false,
+      highScore: 0,
+      isFirstTime: true,
+    },
+    {
+      levelNo: 3,
+      unlocked: false,
+      highScore: 0,
+      isFirstTime: true,
+    },
+    {
+      levelNo: 4,
+      unlocked: false,
+      highScore: 0,
+      isFirstTime: true,
+    },
+    {
+      levelNo: 5,
+      unlocked: false,
+      highScore: 0,
+      isFirstTime: true,
+    },
+  ],
+  touchable: [
+    {
+      levelNo: 1,
+      unlocked: true,
+      highScore: 0,
+      isFirstTime: true,
+    },
+    {
+      levelNo: 2,
+      unlocked: false,
+      highScore: 0,
+      isFirstTime: true,
+    },
+    {
+      levelNo: 3,
+      unlocked: false,
+      highScore: 0,
+      isFirstTime: true,
+    },
+  ],
 };

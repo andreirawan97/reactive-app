@@ -10,7 +10,7 @@ export const loadingLevels: Array<Level> = [
     firstTimeRewards: [
       {
         id: 'currency',
-        value: 1000,
+        value: 100,
       },
       {
         id: 'exp',
@@ -18,11 +18,11 @@ export const loadingLevels: Array<Level> = [
       },
     ],
     chanceRewards: [],
-    timeLimit: 100000,
+    timeLimit: 300000,
     levelNo: 1,
     content: [
       `There are many components that available in React Native such as Text, View, and Image.`,
-      `You can make a loading indicator by using ActivityIndicator component.`
+      `You can make a loading indicator by using ActivityIndicator component.`,
     ],
     stageName: 'Loading',
     codeContent: [
@@ -59,13 +59,8 @@ export const loadingLevels: Array<Level> = [
         tabCount: 0,
       },
     ],
-    correctAnswers: [
-      `<ActivityIndicator/>`,
-      `<ActivityIndicator />`,
-    ],
-    expectedOutput: () => (
-      <ActivityIndicator />
-    ),
+    correctAnswers: [`<ActivityIndicator/>`, `<ActivityIndicator />`],
+    expectedOutput: () => <ActivityIndicator />,
   },
   {
     type: 'fillCode',
@@ -73,7 +68,7 @@ export const loadingLevels: Array<Level> = [
     firstTimeRewards: [
       {
         id: 'currency',
-        value: 50,
+        value: 100,
       },
       {
         id: 'exp',
@@ -81,12 +76,12 @@ export const loadingLevels: Array<Level> = [
       },
     ],
     chanceRewards: [],
-    timeLimit: 100000,
+    timeLimit: 300000,
     levelNo: 2,
     content: [
       `You can adjust the color of the Activity Indicator by use the color prop.`,
       `For example: "<ActivityIndicator color='green' />"`,
-      `Now, make a red Activity Indicator.`
+      `Now, make a red Activity Indicator.`,
     ],
     stageName: 'Loading',
     codeContent: [
@@ -127,8 +122,6 @@ export const loadingLevels: Array<Level> = [
       `<ActivityIndicator color='red'/>`,
       `<ActivityIndicator color='red' />`,
     ],
-    expectedOutput: () => (
-      <ActivityIndicator color="red" />
-    ),
+    expectedOutput: () => <ActivityIndicator color="red" />,
   },
 ];

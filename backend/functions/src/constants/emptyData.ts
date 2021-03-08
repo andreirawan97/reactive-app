@@ -79,6 +79,58 @@ export const emptyJourneyData = {
       isFirstTime: true,
     },
   ],
+  typeIn: [
+    {
+      levelNo: 1,
+      unlocked: true,
+      highScore: 0,
+      isFirstTime: true,
+    },
+    {
+      levelNo: 2,
+      unlocked: false,
+      highScore: 0,
+      isFirstTime: true,
+    },
+    {
+      levelNo: 3,
+      unlocked: false,
+      highScore: 0,
+      isFirstTime: true,
+    },
+    {
+      levelNo: 4,
+      unlocked: false,
+      highScore: 0,
+      isFirstTime: true,
+    },
+    {
+      levelNo: 5,
+      unlocked: false,
+      highScore: 0,
+      isFirstTime: true,
+    },
+  ],
+  touchable: [
+    {
+      levelNo: 1,
+      unlocked: true,
+      highScore: 0,
+      isFirstTime: true,
+    },
+    {
+      levelNo: 2,
+      unlocked: false,
+      highScore: 0,
+      isFirstTime: true,
+    },
+    {
+      levelNo: 3,
+      unlocked: false,
+      highScore: 0,
+      isFirstTime: true,
+    },
+  ],
 };
 
 export const emptyPhoneSkinsData = {
@@ -92,7 +144,9 @@ export const emptyAchievementData = {
     helloWorld: false, // Boolean for is the achievement unlocked. The default is false
     perspective: false,
     potrait: false,
-    loadingComplete: false,
+    loading: false,
+    typeIn: false,
+    touchable: false,
     morningstar: false,
     beffJezos: false,
   },

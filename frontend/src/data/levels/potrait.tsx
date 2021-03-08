@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Image } from 'react-native';
 
 import { Level } from '../journey';
 
@@ -10,7 +10,7 @@ export const potraitLevels: Array<Level> = [
     firstTimeRewards: [
       {
         id: 'currency',
-        value: 200,
+        value: 100,
       },
       {
         id: 'exp',
@@ -107,7 +107,7 @@ export const potraitLevels: Array<Level> = [
     firstTimeRewards: [
       {
         id: 'currency',
-        value: 200,
+        value: 100,
       },
       {
         id: 'exp',

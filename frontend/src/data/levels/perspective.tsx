@@ -10,7 +10,7 @@ export const perspectiveLevels: Array<Level> = [
     firstTimeRewards: [
       {
         id: 'currency',
-        value: 200,
+        value: 100,
       },
       {
         id: 'exp',
@@ -81,7 +81,7 @@ export const perspectiveLevels: Array<Level> = [
     firstTimeRewards: [
       {
         id: 'currency',
-        value: 200,
+        value: 100,
       },
       {
         id: 'exp',
@@ -89,7 +89,7 @@ export const perspectiveLevels: Array<Level> = [
       },
     ],
     chanceRewards: [],
-    timeLimit: 180000,
+    timeLimit: 300000,
     difficulty: 1,
     levelNo: 2,
     content: [
@@ -143,7 +143,7 @@ export const perspectiveLevels: Array<Level> = [
     firstTimeRewards: [
       {
         id: 'currency',
-        value: 200,
+        value: 150,
       },
       {
         id: 'exp',
@@ -151,7 +151,7 @@ export const perspectiveLevels: Array<Level> = [
       },
     ],
     chanceRewards: [],
-    timeLimit: 180000,
+    timeLimit: 250000,
     difficulty: 1,
     levelNo: 3,
     content: [

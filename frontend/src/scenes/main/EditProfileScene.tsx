@@ -25,7 +25,7 @@ import homebrewFetch from '../../helpers/homebrewFetch';
 import { ENDPOINT, FIREBASE_URL } from '../../constants/network';
 import { Response } from '../../types/firestore';
 import { AvatarId } from '../../data/avatars';
-import phoneSkins, { PhoneSkin, PhoneSkinId } from '../../data/phoneSkins';
+import { PhoneSkinId } from '../../data/phoneSkins';
 
 type Props = {} & NavigationScreenProps;
 
@@ -50,7 +50,7 @@ export default function EditProfileScene(props: Props) {
     'iphone6',
   ]);
 
-  const { avatar, name, border, currency } = userData;
+  const { avatar, name, currency } = userData;
 
   const onBackButtonPressed = () => {
     props.navigation.goBack();

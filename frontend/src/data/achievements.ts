@@ -2,7 +2,9 @@ export type AchievementId =
   | 'helloWorld'
   | 'perspective'
   | 'potrait'
-  | 'loadingComplete'
+  | 'loading'
+  | 'typeIn'
+  | 'touchable'
   | 'beffJezos'
   | 'morningstar';
 
@@ -29,9 +31,19 @@ export const achievements: Array<Achievement> = [
     caption: `Complete the "Portrait" stage`,
   },
   {
-    id: 'loadingComplete',
+    id: 'loading',
     name: 'Loading Complete',
     caption: `Complete the "Loading" stage`,
+  },
+  {
+    id: 'typeIn',
+    name: 'Type Out',
+    caption: `Complete the "Type Out" stage`,
+  },
+  {
+    id: 'touchable',
+    name: 'Touchabled',
+    caption: `Complete the "Touchable" stage`,
   },
   {
     id: 'morningstar',

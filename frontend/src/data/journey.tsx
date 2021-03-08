@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { Image, ImageProps, View } from 'react-native';
+import { ImageProps, View } from 'react-native';
 
 import SVG from '../../assets/svg';
 
@@ -7,14 +7,13 @@ import { helloWorldLevels } from './levels/helloWorld';
 import { loadingLevels } from './levels/loading';
 import { perspectiveLevels } from './levels/perspective';
 import { potraitLevels } from './levels/potrait';
+import { touchableLevels } from './levels/touchable';
+import { typeInLevels } from './levels/typeIn';
 import { Reward } from './rewards';
 
 export type StageId =
   // | 'tutorialJavascript'
-  | 'helloWorld'
-  | 'perspective'
-  | 'potrait' 
-  | "loading";
+  'helloWorld' | 'perspective' | 'potrait' | 'loading' | 'typeIn' | 'touchable';
 
 export type Code = {
   tabCount: number;
@@ -88,7 +87,7 @@ export const journey: Journey = [
           React.createElement(SVG.helloWorldSVG, { width: 50, height: 50 }),
         name: 'Hello World!',
         description:
-          'This is the most basic. Learn how to write bug-free Hello World text!',
+          'This is the most basic. Learn how to write bug-free Hello World text!\nComponent: Text.',
         levels: helloWorldLevels,
       },
       {
@@ -97,7 +96,8 @@ export const journey: Journey = [
         icon: () =>
           React.createElement(SVG.perspectiveSVG, { width: 50, height: 50 }),
         name: 'Perspective',
-        description: 'Learn how to build a layout with View component.',
+        description:
+          'Learn how to build a layout with View component.\nComponent: View. ',
         levels: perspectiveLevels,
       },
       {
@@ -116,7 +116,8 @@ export const journey: Journey = [
           </View>
         ),
         name: 'Portrait',
-        description: 'Learn how to make an image in React Native!',
+        description:
+          'Learn how to make an image in React Native!\nComponent: Image. ',
         levels: potraitLevels,
       },
       {
@@ -135,8 +136,32 @@ export const journey: Journey = [
           </View>
         ),
         name: 'Loading',
-        description: `No, your internet connection is fine. Learn how to make a loading indicator.`,
+        description: `No, your internet connection is fine. Learn how to make a loading indicator.\nComponent: Acitivity Indicator.`,
         levels: loadingLevels,
+      },
+    ],
+  },
+  {
+    name: 'State of Reactive',
+    stages: [
+      {
+        type: 'challenge',
+        id: 'typeIn',
+        icon: () =>
+          React.createElement(SVG.typeInSVG, { width: 50, height: 30 }),
+        name: 'Type In',
+        description:
+          'Learn how to make a component that user can type with.\nComponent: Text Input',
+        levels: typeInLevels,
+      },
+      {
+        type: 'challenge',
+        id: 'touchable',
+        icon: () =>
+          React.createElement(SVG.touchableSVG, { width: 50, height: 30 }),
+        name: 'Touchable',
+        description: `It's like a button, but more flexible.\nComponent: Touchable Opacity`,
+        levels: touchableLevels,
       },
     ],
   },

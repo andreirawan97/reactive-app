@@ -11,7 +11,7 @@ import SVG from '../../../assets/svg';
 import { showModal, closeModal } from '../../core-ui/ModalProvider';
 import { calculateScore, rollRewards } from '../../helpers/level';
 import { Reward } from '../../data/rewards';
-import { UserLevelData, UserJourney } from '../../fixtures/journey';
+import { UserJourney } from '../../fixtures/journey';
 import { Button } from '../../core-ui';
 import homebrewFetch from '../../helpers/homebrewFetch';
 import { FIREBASE_URL, ENDPOINT } from '../../constants/network';
@@ -143,11 +143,14 @@ export default function LevelScene(props: Props) {
     const finalRewards: Array<Reward> = isFirstTime
       ? [...firstTimeRewards]
       : [];
-    chanceRewards.forEach((chanceReward) => {
-      if (rollRewards(chanceReward)) {
-        finalRewards.push(chanceReward);
-      }
-    });
+
+    if (!isFirstTime) {
+      chanceRewards.forEach((chanceReward) => {
+        if (rollRewards(chanceReward)) {
+          finalRewards.push(chanceReward);
+        }
+      });
+    }
 
     let requestBodyObject = {
       username: decodeToken(getFromStorage(LOCALSTORAGE_KEYS.TOKEN) || ''),
