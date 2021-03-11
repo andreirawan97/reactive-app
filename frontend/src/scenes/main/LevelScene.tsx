@@ -152,7 +152,7 @@ export default function LevelScene(props: Props) {
     finalRewards[1].value =
       Number(finalRewards[1].value) + Math.floor(currentTime / 2500);
 
-    if (!isFirstTime) {
+    if (isFirstTime) {
       chanceRewards.forEach((chanceReward) => {
         if (rollRewards(chanceReward)) {
           finalRewards.push(chanceReward);
