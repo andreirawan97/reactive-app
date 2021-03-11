@@ -902,6 +902,42 @@ export const deleteFriend = functions.https.onRequest(async (req, res) => {
   });
 });
 
+export const rickRolled = functions.https.onRequest(async (req, res) => {
+  let { token } = JSON.parse(req.body);
+  let username = jwt.verify(token, SECRET_KEY) as string;
+
+  const achievementSnapshot = await firestore
+    .collection(COLLECTION_NAME.ACHIEVEMENTS)
+    .doc(username)
+    .get();
+
+  const achievementData = achievementSnapshot.data();
+
+  if (achievementData) {
+    achievementData.data["rickRolled"] = true;
+    achievementData.latestAchievementId = "rickRolled";
+
+    await firestore
+      .collection(COLLECTION_NAME.ACHIEVEMENTS)
+      .doc(username)
+      .set(achievementData);
+
+    res.set({ "Access-Control-Allow-Origin": "*" });
+    res.send({
+      success: true,
+      message: "Never gonna give you up.",
+      token: "",
+    });
+  } else {
+    res.set({ "Access-Control-Allow-Origin": "*" });
+    res.send({
+      success: false,
+      message: "Never gonna let you down.",
+      token: "",
+    });
+  }
+});
+
 export const ADMIN_UPDATE_JOURNEY_TO_LATEST = functions.https.onRequest(
   async (req, res) => {
     const promises: Array<Promise<unknown>> = [];

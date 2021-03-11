@@ -42,12 +42,16 @@ export default function JourneyScene(props: Props) {
     React.createElement(SVG.lockSVG, { width: 50, height: 50 });
 
   let StageComponent = (props: Stage) => {
-    let { name, icon } = props;
+    let { name, icon, id } = props;
 
     const StageIcon = icon;
     return (
       <TouchableOpacity
-        style={styles.stageContainer}
+        style={
+          currentStage.id === id
+            ? styles.stageContainerSelected
+            : styles.stageContainer
+        }
         onPress={() => setCurrentStage(props)}
       >
         <View style={styles.stageIcon}>
@@ -217,6 +221,21 @@ const styles = StyleSheet.create({
   },
   stageContainer: {
     backgroundColor: COLORS.PRIMARY,
+    borderRadius: 8,
+    shadowColor: 'rgba(0,0,0,0.16)',
+    shadowRadius: 6,
+    shadowOffset: {
+      width: 1,
+      height: 2,
+    },
+    padding: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    height: 90,
+  },
+  stageContainerSelected: {
+    backgroundColor: '#62b6c4',
     borderRadius: 8,
     shadowColor: 'rgba(0,0,0,0.16)',
     shadowRadius: 6,

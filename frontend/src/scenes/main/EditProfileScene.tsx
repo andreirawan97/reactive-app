@@ -26,6 +26,7 @@ import { ENDPOINT, FIREBASE_URL } from '../../constants/network';
 import { Response } from '../../types/firestore';
 import { AvatarId } from '../../data/avatars';
 import { PhoneSkinId } from '../../data/phoneSkins';
+import SVG from '../../../assets/svg';
 
 type Props = {} & NavigationScreenProps;
 
@@ -101,18 +102,33 @@ export default function EditProfileScene(props: Props) {
         showModal({
           showCloseButton: true,
           dismissable: false,
-          content: () => (
-            <View
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingVertical: 60,
-              }}
-            >
-              <Text>{data.message}</Text>
-            </View>
-          ),
+          content: () => {
+            let GreenCheckmarkIcon = () =>
+              React.createElement(SVG.greenCheckmarkSVG, {
+                width: 90,
+                height: 90,
+              });
+            let RedCrossmarkIcon = () =>
+              React.createElement(SVG.redCrossmarkSVG, {
+                width: 90,
+                height: 90,
+              });
+            return (
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingVertical: 60,
+                }}
+              >
+                <View style={{ marginBottom: 48 }}>
+                  {data.success ? <GreenCheckmarkIcon /> : <RedCrossmarkIcon />}
+                </View>
+                <Text style={{ fontSize: 16 }}>{data.message}</Text>
+              </View>
+            );
+          },
           onCloseModal: () => {
             props.navigation.goBack();
           },

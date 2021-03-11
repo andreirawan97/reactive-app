@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
+import SVG from '../../../../assets/svg';
 import { ShopItemList } from '../../../components';
 import { LOCALSTORAGE_KEYS } from '../../../constants/keys';
 import { ENDPOINT, FIREBASE_URL } from '../../../constants/network';
@@ -50,20 +51,31 @@ export default function ShopScene(props: Props) {
   const MessageModalContent = (messageModalProps: {
     success: boolean;
     transactionMessage: string;
-  }) => (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 60,
-      }}
-    >
-      <Text style={{ fontSize: 16 }}>
-        {messageModalProps.transactionMessage}
-      </Text>
-    </View>
-  );
+  }) => {
+    let { transactionMessage, success } = messageModalProps;
+
+    let GreenCheckmarkIcon = () =>
+      React.createElement(SVG.greenCheckmarkSVG, { width: 90, height: 90 });
+    let RedCrossmarkIcon = () =>
+      React.createElement(SVG.redCrossmarkSVG, { width: 90, height: 90 });
+
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingVertical: 60,
+        }}
+      >
+        <View style={{ marginBottom: 48 }}>
+          {success ? <GreenCheckmarkIcon /> : <RedCrossmarkIcon />}
+        </View>
+
+        <Text style={{ fontSize: 16 }}>{transactionMessage}</Text>
+      </View>
+    );
+  };
 
   let onPurchasePress = (item: Avatar | PhoneSkin) => {
     showModal({

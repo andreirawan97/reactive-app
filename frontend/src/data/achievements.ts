@@ -6,7 +6,8 @@ export type AchievementId =
   | 'typeIn'
   | 'touchable'
   | 'beffJezos'
-  | 'morningstar';
+  | 'morningstar'
+  | 'rickRolled';
 
 type Achievement = {
   id: AchievementId;
@@ -54,5 +55,10 @@ export const achievements: Array<Achievement> = [
     id: 'beffJezos',
     name: 'Beff Jezos',
     caption: 'Get Millionaire avatar',
+  },
+  {
+    id: 'rickRolled',
+    name: 'Rick Rolled',
+    caption: 'Never gonna give you up.',
   },
 ];

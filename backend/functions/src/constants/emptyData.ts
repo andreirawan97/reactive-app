@@ -149,6 +149,7 @@ export const emptyAchievementData = {
     touchable: false,
     morningstar: false,
     beffJezos: false,
+    rickRolled: false,
   },
 };
 

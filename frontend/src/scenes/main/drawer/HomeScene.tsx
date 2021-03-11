@@ -33,6 +33,7 @@ const getUserAchievementsURL = `${FIREBASE_URL}${ENDPOINT.GET_USER_ACHIEVEMENTS}
 const getFriendsURL = `${FIREBASE_URL}${ENDPOINT.GET_USER_FRIENDS}`;
 const addFriendURL = `${FIREBASE_URL}${ENDPOINT.ADD_FRIEND}`;
 const deleteFriendURL = `${FIREBASE_URL}${ENDPOINT.DELETE_FRIEND}`;
+const rickRolledURL = `${FIREBASE_URL}${ENDPOINT.RICK_ROLLED}`;
 
 type Props = {} & NavigationScreenProps;
 
@@ -43,13 +44,28 @@ export default function HomeScene(props: Props) {
       helloWorld: false, // Boolean for is the achievement unlocked. The default is false
       perspective: false,
       potrait: false,
-      loadingComplete: false,
+      loading: false,
       morningstar: false,
       beffJezos: false,
+      touchable: false,
+      typeIn: false,
+      rickRolled: false,
     },
   });
   const [friendList, setFriendList] = useState<Array<Friend>>([]);
   const [friendUsername, setFriendUsername] = useState('');
+  const [egg, setEgg] = useState(0);
+
+  useEffect(() => {
+    if (egg === 10) {
+      homebrewFetch('POST', rickRolledURL, tokenReqBody)
+        .then((response) => response.json())
+        .then(() => {
+          location.reload();
+        });
+      window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+    }
+  }, [egg]);
 
   let onSuccessGetUserAchievements = useCallback((response: Response) => {
     let { token } = response;
@@ -141,11 +157,27 @@ export default function HomeScene(props: Props) {
     });
   };
 
-  let showAddFriendResult = (message: string, token: string) => {
+  let showAddFriendResult = (data: Response) => {
+    let { message, success, token } = data;
+
+    let GreenCheckmarkIcon = () =>
+      React.createElement(SVG.greenCheckmarkSVG, {
+        width: 90,
+        height: 90,
+      });
+    let RedCrossmarkIcon = () =>
+      React.createElement(SVG.redCrossmarkSVG, {
+        width: 90,
+        height: 90,
+      });
+
     showModal({
       content: () => (
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <Text>{message}</Text>
+          <View style={{ marginBottom: 48 }}>
+            {success ? <GreenCheckmarkIcon /> : <RedCrossmarkIcon />}
+          </View>
+          <Text style={{ fontSize: 16 }}>{message}</Text>
         </View>
       ),
       containerStyle: {
@@ -188,7 +220,7 @@ export default function HomeScene(props: Props) {
       homebrewFetch('POST', addFriendURL, requestBody)
         .then((response) => response.json())
         .then((data: Response) => {
-          showAddFriendResult(data.message, data.token);
+          showAddFriendResult(data);
         });
     } else {
       showAddFriendResult("Friend's username cannot be empty!", '');
@@ -407,7 +439,7 @@ export default function HomeScene(props: Props) {
 
                       homebrewFetch('POST', deleteFriendURL, requestBody)
                         .then((response) => response.json())
-                        .then((data: Response) => {});
+                        .then(() => {});
                     }}
                     size={28}
                   />
@@ -428,8 +460,15 @@ export default function HomeScene(props: Props) {
         <HomeStart />
         <Text style={styles.headerText}>Start Your Journey Now</Text>
         <Text style={styles.captionText}>
-          Let&apos;s start your Reactive journey and become the master of React
-          Native!
+          Let&apos;s start your Reactive journey and become the{' '}
+          <Text
+            onPress={() => {
+              setEgg(egg + 1);
+            }}
+          >
+            master
+          </Text>{' '}
+          of React Native!
         </Text>
       </View>
       <View style={styles.rightContainer}>

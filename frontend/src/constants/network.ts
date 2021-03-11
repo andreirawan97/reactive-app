@@ -23,4 +23,5 @@ export const ENDPOINT = {
   GET_USER_FRIENDS: 'getUserFriends',
   ADD_FRIEND: 'addFriend',
   DELETE_FRIEND: 'deleteFriend',
+  RICK_ROLLED: 'rickRolled',
 };
