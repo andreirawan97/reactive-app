@@ -79,9 +79,11 @@ export default function LevelScene(props: Props) {
             <View
               style={[
                 styles.numberContainer,
-                { borderTopLeftRadius: i === 0 ? 12 : 0 },
                 {
+                  borderTopLeftRadius: i === 0 ? 12 : 0,
                   borderBottomLeftRadius: i === codeContent.length - 1 ? 12 : 0,
+                  paddingTop: i === 0 ? 18 : 6,
+                  paddingBottom: i === codeContent.length - 1 ? 18 : 6,
                 },
               ]}
             >
@@ -90,10 +92,12 @@ export default function LevelScene(props: Props) {
             <View
               style={[
                 styles.codeTextContainer,
-                { borderTopRightRadius: i === 0 ? 12 : 0 },
                 {
+                  borderTopRightRadius: i === 0 ? 12 : 0,
                   borderBottomRightRadius:
                     i === codeContent.length - 1 ? 12 : 0,
+                  paddingTop: i === 0 ? 18 : 6,
+                  paddingBottom: i === codeContent.length - 1 ? 18 : 6,
                 },
               ]}
             >
@@ -110,7 +114,7 @@ export default function LevelScene(props: Props) {
                     placeholder="// Enter your code here"
                     style={[
                       styles.codeInput,
-                      { marginLeft: 20 * code.tabCount },
+                      { marginLeft: 20 * code.tabCount + 8 },
                     ]}
                   />
                   <Feather
@@ -125,7 +129,10 @@ export default function LevelScene(props: Props) {
                 </View>
               ) : (
                 <Text
-                  style={[styles.codeText, { marginLeft: 20 * code.tabCount }]}
+                  style={[
+                    styles.codeText,
+                    { marginLeft: 20 * code.tabCount + 8 },
+                  ]}
                 >
                   {code.code}
                 </Text>
@@ -373,7 +380,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   levelContentText: {
-    fontSize: FONT_SIZE.PARAGRAPH1,
+    fontSize: 16,
     marginBottom: 20,
     color: 'rgba(0,0,0,0.7)',
   },
@@ -386,15 +393,16 @@ const styles = StyleSheet.create({
   },
   numberContainer: {
     backgroundColor: '#000000',
-    paddingVertical: 12,
+    paddingVertical: 6,
     width: 60,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   codeTextContainer: {
     backgroundColor: '#313131',
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 12,
+    paddingHorizontal: 6,
   },
   codeText: {
     fontSize: 16,
@@ -410,8 +418,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     color: 'black',
     fontSize: 16,
-    borderRadius: 12,
+    borderRadius: 8,
     paddingHorizontal: 12,
+    paddingVertical: 8,
   },
   headerContainer: {
     flexDirection: 'row',
