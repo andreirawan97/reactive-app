@@ -424,7 +424,7 @@ export default function HomeScene() {
                       <Text style={{ fontSize: 12 }}>
                         Level {Math.floor(friend.currentExp / 1000) + 1}
                       </Text>
-                      <Text style={{ fontSize: 14, color: 'rgba(0,0,0,0.6)' }}>
+                      <Text style={{ fontSize: 12, color: 'rgba(0,0,0,0.6)' }}>
                         {' '}
                         ({friend.currentExp})
                       </Text>
