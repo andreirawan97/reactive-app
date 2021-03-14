@@ -94,7 +94,7 @@ export const touchableLevels: Array<Level> = [
     levelNo: 2,
     content: [
       `Now, let's make our Touchable do something.`,
-      `We can add "onPress" property that receive a function.`,
+      `We can add "onPress" property that receive a function. For example: "onPress={someFunction}".`,
       `"onPress" will run the function after it detects a touch.`,
       `Now make our button to add a number everytime it is being pressed.`,
     ],

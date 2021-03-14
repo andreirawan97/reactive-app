@@ -37,7 +37,7 @@ const rickRolledURL = `${FIREBASE_URL}${ENDPOINT.RICK_ROLLED}`;
 
 type Props = {} & NavigationScreenProps;
 
-export default function HomeScene(props: Props) {
+export default function HomeScene() {
   const [userAchievements, setUserAchievements] = useState<UserAchievements>({
     latestAchievementId: '',
     data: {
@@ -223,7 +223,11 @@ export default function HomeScene(props: Props) {
           showAddFriendResult(data);
         });
     } else {
-      showAddFriendResult("Friend's username cannot be empty!", '');
+      showAddFriendResult({
+        message: "Friend's username cannot be empty!",
+        success: false,
+        token: '',
+      });
     }
   };
 
@@ -400,16 +404,22 @@ export default function HomeScene(props: Props) {
                   />
 
                   <View>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        fontWeight: 'bold',
-                        marginBottom: 5,
-                      }}
-                      numberOfLines={1}
-                    >
-                      {friend.name}
-                    </Text>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontWeight: 'bold',
+                          marginBottom: 5,
+                        }}
+                        numberOfLines={1}
+                      >
+                        {friend.name}
+                      </Text>
+                      <Text style={{ fontSize: 14, color: 'rgba(0,0,0,0.6)' }}>
+                        (@{friend.username})
+                      </Text>
+                    </View>
+
                     <Text style={{ fontSize: 12 }}>
                       Level {Math.floor(friend.currentExp / 1000) + 1}
                     </Text>
