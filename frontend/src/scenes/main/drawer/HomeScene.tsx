@@ -495,8 +495,8 @@ export default function HomeScene() {
             }}
           >
             survey
-          </Text>{' '}
-          about Reactive app.
+          </Text>
+          {'.'}
         </Text>
       </View>
       <View style={styles.rightContainer}>
