@@ -475,7 +475,7 @@ export default function HomeScene() {
       <View style={styles.homeContainer}>
         <HomeStart />
         <Text style={styles.headerText}>Start Your Journey Now</Text>
-        <Text style={styles.captionText}>
+        <Text style={[styles.captionText, { marginBottom: 12 }]}>
           Let&apos;s start your Reactive journey and become the{' '}
           <Text
             onPress={() => {
@@ -485,6 +485,17 @@ export default function HomeScene() {
             master
           </Text>{' '}
           of React Native!
+        </Text>
+        <Text style={styles.captionText}>
+          Please take a moment to fill out the{' '}
+          <Text
+            style={{ color: COLORS.PRIMARY, fontWeight: 'bold' }}
+            onPress={() => {
+              window.open('https://forms.gle/sNKWWVEWjViKBX5w8');
+            }}
+          >
+            survey
+          </Text>
         </Text>
       </View>
       <View style={styles.rightContainer}>
