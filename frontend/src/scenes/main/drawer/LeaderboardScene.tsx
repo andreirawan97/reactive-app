@@ -63,7 +63,7 @@ export default function LeaderboardScene(props: Props) {
 
               <View>
                 <Text style={styles.name}>{data.name}</Text>
-                <Text style={styles.username}>{data.username}</Text>
+                <Text style={styles.username}>@{data.username}</Text>
               </View>
             </View>
 
