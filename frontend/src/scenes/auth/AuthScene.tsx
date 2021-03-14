@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, Image, Alert } from 'react-native';
+import { View, StyleSheet, Text, Image } from 'react-native';
 import md5 from 'md5';
 
 import Switcher from '../../core-ui/Switcher';
@@ -60,7 +60,7 @@ export default function AuthScene() {
 
       const URL = `${FIREBASE_URL}${ENDPOINT.SIGNUP}`;
       const response = await homebrewFetch('POST', URL, {
-        username,
+        username: username.replaceAll(' ', ''),
         password: md5(password),
         name,
       });

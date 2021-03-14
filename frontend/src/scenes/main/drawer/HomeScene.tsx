@@ -173,7 +173,7 @@ export default function HomeScene() {
 
     showModal({
       content: () => (
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+        <View style={{ justifyContent: 'center' }}>
           <View style={{ marginBottom: 48 }}>
             {success ? <GreenCheckmarkIcon /> : <RedCrossmarkIcon />}
           </View>

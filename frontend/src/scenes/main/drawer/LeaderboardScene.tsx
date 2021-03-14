@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Avatar } from 'react-native-elements';
 
@@ -17,7 +17,7 @@ const getFriendsLeaderboardURL = `${FIREBASE_URL}${ENDPOINT.GET_FRIENDS_LEADERBO
 const reqBody = { token: getFromStorage(LOCALSTORAGE_KEYS.TOKEN) };
 
 type Props = {};
-export default function LeaderboardScene(props: Props) {
+export default function LeaderboardScene() {
   const [leaderboardGlobalData, setLeaderboardGlobalData] = useState<Array<
     UserData
   > | null>(null);
