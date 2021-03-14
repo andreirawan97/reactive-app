@@ -16,7 +16,7 @@ const nexus5 = {
     width: 177,
     height: 318,
   },
-  price: 8000,
+  price: 2000,
 };
 
 export default nexus5;
