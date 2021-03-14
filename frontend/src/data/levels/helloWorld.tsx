@@ -21,7 +21,7 @@ export const helloWorldLevels: Array<Level> = [
       {
         id: 'avatar',
         value: 'fallenCoder',
-        chance: 0.1,
+        chance: 0.9,
       },
     ],
     timeLimit: 300000,
