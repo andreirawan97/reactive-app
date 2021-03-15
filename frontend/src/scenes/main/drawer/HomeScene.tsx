@@ -173,19 +173,20 @@ export default function HomeScene() {
 
     showModal({
       content: () => (
-        <View style={{ justifyContent: 'center' }}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingVertical: 60,
+          }}
+        >
           <View style={{ marginBottom: 48 }}>
             {success ? <GreenCheckmarkIcon /> : <RedCrossmarkIcon />}
           </View>
           <Text style={{ fontSize: 16 }}>{message}</Text>
         </View>
       ),
-      containerStyle: {
-        width: '60%',
-      },
-      contentContainerStyle: {
-        paddingVertical: 20,
-      },
       onCloseModal: () => {
         if (token) {
           window.location.reload();

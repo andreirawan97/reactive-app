@@ -151,15 +151,15 @@ export default function LevelScene(props: Props) {
       ? [...firstTimeRewards]
       : [];
 
-    // Add bonus coffee beans based on completion time
-    finalRewards[0].value =
-      Number(finalRewards[0].value) + Math.floor(currentTime / 2000);
-
-    // Add bonus exp based on completion time
-    finalRewards[1].value =
-      Number(finalRewards[1].value) + Math.floor(currentTime / 2500);
-
     if (isFirstTime) {
+      // Add bonus coffee beans based on completion time
+      finalRewards[0].value =
+        Number(finalRewards[0].value) + Math.floor(currentTime / 2000);
+
+      // Add bonus exp based on completion time
+      finalRewards[1].value =
+        Number(finalRewards[1].value) + Math.floor(currentTime / 2500);
+
       chanceRewards.forEach((chanceReward) => {
         if (rollRewards(chanceReward)) {
           finalRewards.push(chanceReward);
