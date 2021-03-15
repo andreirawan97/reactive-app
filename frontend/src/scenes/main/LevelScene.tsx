@@ -51,6 +51,7 @@ export default function LevelScene(props: Props) {
   const [answer, setAnswer] = useState('');
   const [currentTime, setCurrentTime] = useState(timeLimit);
   const [stopTimer, setStopTimer] = useState(false);
+  const [isEditable, setEditable] = useState(true);
 
   let onHomeButtonPress = useCallback(() => {
     closeModal();
@@ -116,6 +117,7 @@ export default function LevelScene(props: Props) {
                       styles.codeInput,
                       { marginLeft: 20 * code.tabCount + 8 },
                     ]}
+                    editable={isEditable}
                   />
                   <Feather
                     name="delete"
@@ -291,6 +293,7 @@ export default function LevelScene(props: Props) {
   useEffect(() => {
     if (correctAnswers.includes(answer)) {
       setStopTimer(true);
+      setEditable(false);
       showModal({
         content: FinishedModalContent,
         showCloseButton: false,
