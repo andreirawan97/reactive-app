@@ -25,8 +25,6 @@ export default function LeaderboardScene() {
     UserData
   > | null>(null);
 
-  console.log(leaderboardFriendsData);
-
   const onSuccessGlobalLeaderboardFetch = useCallback((response: Response) => {
     let { token } = response;
     let data = decodeToken(token) as { data: Array<UserData> };
@@ -36,7 +34,6 @@ export default function LeaderboardScene() {
   const onSuccessFriendLeaderboardFetch = useCallback((response: Response) => {
     let { token } = response;
     let data = decodeToken(token) as { friendList: Array<UserData> };
-    console.log(data);
     setLeaderboardFriendsData(data.friendList);
   }, []);
 

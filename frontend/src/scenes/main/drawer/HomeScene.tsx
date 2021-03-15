@@ -474,6 +474,33 @@ export default function HomeScene() {
   return (
     <View style={styles.container}>
       <View style={styles.homeContainer}>
+        <View
+          style={{
+            width: '90%',
+            backgroundColor: 'white',
+            paddingVertical: 18,
+            borderRadius: 6,
+            shadowColor: 'rgba(0,0,0,0.16)',
+            shadowRadius: 6,
+            shadowOffset: {
+              width: 1,
+              height: 3,
+            },
+          }}
+        >
+          <Text style={styles.surveyText}>
+            Enjoy this app? Please take a moment to fill out the{' '}
+            <Text
+              style={{ color: COLORS.PRIMARY, fontWeight: 'bold' }}
+              onPress={() => {
+                window.open('https://forms.gle/sNKWWVEWjViKBX5w8');
+              }}
+            >
+              survey
+            </Text>
+            {'.'}
+          </Text>
+        </View>
         <HomeStart />
         <Text style={styles.headerText}>Start Your Journey Now</Text>
         <Text style={[styles.captionText, { marginBottom: 12 }]}>
@@ -486,18 +513,6 @@ export default function HomeScene() {
             master
           </Text>{' '}
           of React Native!
-        </Text>
-        <Text style={styles.captionText}>
-          Please take a moment to fill out the{' '}
-          <Text
-            style={{ color: COLORS.PRIMARY, fontWeight: 'bold' }}
-            onPress={() => {
-              window.open('https://forms.gle/sNKWWVEWjViKBX5w8');
-            }}
-          >
-            survey
-          </Text>
-          {'.'}
         </Text>
       </View>
       <View style={styles.rightContainer}>
@@ -529,7 +544,8 @@ const styles = StyleSheet.create({
   homeContainer: {
     flex: 2,
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
+    paddingTop: 20,
   },
   rightContainer: {
     flex: 0.8,
@@ -545,6 +561,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'rgba(0,0,0,0.6)',
     width: 390,
+    textAlign: 'center',
+  },
+  surveyText: {
+    fontSize: 16,
+    color: 'rgba(0,0,0,0.6)',
+    fontWeight: 'bold',
     textAlign: 'center',
   },
 });

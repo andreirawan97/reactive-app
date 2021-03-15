@@ -338,7 +338,6 @@ export default function LevelScene(props: Props) {
               {text}
             </Text>
           ))}
-
           {CodeEditor()}
         </ScrollView>
       </View>
